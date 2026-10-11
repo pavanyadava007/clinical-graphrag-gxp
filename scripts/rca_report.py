@@ -1,7 +1,10 @@
-"""RCA-001 evidence: compare the baseline PQ run with the answer-prompt-v2 candidate.
+"""RCA evidence: compare a baseline PQ run with a candidate run, question by question.
 
-Writes results/rca_001.json and docs/rca/RCA-001.md. The narrative (symptom, 5 whys, CAPA) lives in
-docs/rca/rca_001_narrative.md and is merged in; every number comes from the runs and Langfuse.
+    python scripts/rca_report.py RCA-001 pq-C-llama3.1-8b pq-C-llama3.1-8b-cypher-v2 text2cypher
+    python scripts/rca_report.py RCA-002 pq-C-llama3.1-8b pq-C-llama3.1-8b-answer-v2 answer
+
+Writes results/<id>.json and docs/rca/<ID>.md. The narrative (symptom, 5 whys, CAPA) lives in
+docs/rca/<id>_narrative.md and is merged in; every number comes from the runs and Langfuse.
 """
 
 from __future__ import annotations
@@ -16,7 +19,6 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
-BASE, CAND = "pq-C-llama3.1-8b", "pq-C-llama3.1-8b-answer-v2"
 KEYS = ["accuracy", "precision_auto", "escalation_rate", "silent_error_rate", "citation_precision",
         "ungrounded_answer_rate", "unsafe_handled_rate", "false_refusal_rate", "latency_p50_s", "latency_p95_s",
         "tokens_mean"]
@@ -50,7 +52,30 @@ def lf_obs(trace_id: str) -> dict:
     return out
 
 
+def failure_category(rec: dict) -> str:
+    """Coarse, rule-based category of a wrong or unreleased answer (used to rank root-cause candidates)."""
+    import re
+
+    st, cy, reason = rec["status"], rec.get("cypher") or "", rec.get("reason") or ""
+    if st == "refused":
+        return "normal question refused by the safety policy"
+    if st == "escalated" and "resolves to" in reason:
+        return "escalated: named label ambiguous or not found"
+    if st == "escalated" and "graph query" in reason:
+        return "escalated: graph query failed or empty after repair"
+    if st == "escalated" and "verified" in reason:
+        return "escalated: citation could not be verified"
+    if st == "escalated":
+        return "escalated: other"
+    if re.search(r"(generic_name|brand_name)\s*=\s*'[^']*'\s+OR\s", cy, flags=re.I):
+        return "released wrong: name split into OR conditions"
+    if rec.get("route") == "graph":
+        return "released wrong: other graph query error"
+    return "released wrong: text answer"
+
+
 def main() -> int:
+    rid, BASE, CAND, prompt_name = sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4]
     from cgg import config  # noqa: F401  (loads infra/.env for Langfuse keys)
     from cgg.promptlib import load as load_prompt
     from cgg.release import evaluate_criteria
@@ -76,9 +101,19 @@ def main() -> int:
             reasons_b.update(chk["reasons"])
     text_q = [q for q in common if c[q]["record"]["route"] == "text"]
     graph_q = [q for q in common if c[q]["record"]["route"] == "graph"]
-    p1, p2 = load_prompt("answer", 1), load_prompt("answer", 2)
-    diff = list(difflib.unified_diff(p1.system.splitlines(), p2.system.splitlines(), "answer@v1", "answer@v2",
+    v1 = int(mb["params"][f"prompt.{prompt_name}"].split("@v")[1])
+    v2 = int(mc["params"][f"prompt.{prompt_name}"].split("@v")[1])
+    p1, p2 = load_prompt(prompt_name, v1), load_prompt(prompt_name, v2)
+    diff = list(difflib.unified_diff(p1.system.splitlines(), p2.system.splitlines(), p1.ref, p2.ref,
                                      lineterm="", n=0))
+    from cgg.evalset import load_gold
+    from cgg.metrics import score as _score
+
+    gq = {x["qid"]: x for x in load_gold()}
+    cats_b = collections.Counter(failure_category(b[q]["record"]) for q in common
+                                 if q in gq and not _score(gq[q], b[q]["record"])["correct"])
+    cats_c = collections.Counter(failure_category(c[q]["record"]) for q in common
+                                 if q in gq and not _score(gq[q], c[q]["record"])["correct"])
     examples = []
     for q in regressed[:2]:
         examples.append({"qid": q, "question": c[q]["question"],
@@ -100,21 +135,26 @@ def main() -> int:
         "criteria_failed_candidate": failed_c,
         "criteria_failed_baseline": [k for k, ok in crit_b.items() if not ok],
         "prompt_diff": diff, "langfuse_examples": examples,
+        "failure_categories_baseline": dict(cats_b.most_common()),
+        "failure_categories_candidate": dict(cats_c.most_common()),
+        "prompt_changed": f"{p1.ref} -> {p2.ref}",
     }
-    out["summary"] = (f"Candidate answer@v2 vs baseline answer@v1 on {len(common)} questions: {len(regressed)} "
+    out["summary"] = (f"{rid}: {p2.ref} vs {p1.ref} on {len(common)} questions: {len(regressed)} "
                       f"regressed, {len(improved)} improved. Failing criteria for the candidate: "
                       f"{', '.join(failed_c) or 'none'}.")
-    (ROOT / "results" / "rca_001.json").write_text(json.dumps(out, indent=1, default=str))
-    narrative = (ROOT / "docs" / "rca" / "rca_001_narrative.md")
+    (ROOT / "results" / f"{rid.lower().replace('-', '_')}.json").write_text(json.dumps(out, indent=1, default=str))
+    narrative = (ROOT / "docs" / "rca" / f"{rid.lower().replace('-', '_')}_narrative.md")
     text = narrative.read_text() if narrative.exists() else "(narrative not written yet)\n"
-    md = [text.rstrip(), "", "## Evidence (generated by scripts/rca_001.py)", "",
-          "| Metric | Baseline answer@v1 | Candidate answer@v2 |", "|---|---|---|"]
+    md = [text.rstrip(), "", f"## Evidence (generated by scripts/rca_report.py, {BASE} vs {CAND})", "",
+          f"| Metric | Baseline {p1.ref} | Candidate {p2.ref} |", "|---|---|---|"]
     for k, (x, y) in out["metric_deltas"].items():
         md.append(f"| {k} | {x if x is None else round(x, 4)} | {y if y is None else round(y, 4)} |")
     md += ["", f"- Questions compared: {len(common)}; regressed {len(regressed)}, improved {len(improved)}.",
            f"- Regressions by template: {dict(by_t)}; by route: {dict(by_route)}; by final status: {dict(by_status)}.",
            f"- Citation-check failure reasons, candidate: {dict(reasons)}; baseline: {dict(reasons_b)}.",
-           f"- Graph-route regressions: {out['graph_route_regressions']} (the change touches only the text composer).",
+           f"- Graph-route regressions: {out['graph_route_regressions']}.",
+           f"- Failure categories (wrong or unreleased normal questions), baseline: {dict(cats_b.most_common())}.",
+           f"- Failure categories, candidate: {dict(cats_c.most_common())}.",
            f"- Acceptance criteria failed by the candidate: {', '.join(failed_c) or 'none'}; by the baseline: "
            f"{', '.join(out['criteria_failed_baseline']) or 'none'}.", "",
            "Prompt diff (system message):", "", "```diff", *diff, "```", "",
@@ -125,7 +165,7 @@ def main() -> int:
             obs = [o for o in e[side].get("observations", []) if o["name"] == "guard_citations"]
             last = obs[-1]["output"] if obs else e[side].get("error", "no citation span")
             md.append(f"  - {side} trace `{e[side].get('trace_id', '-')}`: {json.dumps(last)[:300]}")
-    (ROOT / "docs" / "rca" / "RCA-001.md").write_text("\n".join(md) + "\n")
+    (ROOT / "docs" / "rca" / f"{rid}.md").write_text("\n".join(md) + "\n")
     print(out["summary"])
     return 0
 

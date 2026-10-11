@@ -100,9 +100,6 @@ def build() -> None:
     for f in ("demo.mp4", "demo.webm"):
         if (ROOT / "docs" / f).exists():
             shutil.copy(ROOT / "docs" / f, SITE / f)
-    rca = ROOT / "docs" / "rca" / "RCA-001.md"
-    if rca.exists():
-        shutil.copy(rca, SITE / "RCA-001.md")
     print(f"built {SITE}")
 
 

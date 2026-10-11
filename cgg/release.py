@@ -76,9 +76,12 @@ def gates(version: int) -> dict:
     if tr_path.exists():
         tr = json.loads(tr_path.read_text())
         open_items = [r["urs"] for r in tr["rows"] if r["status"] != "verified"]
-        g2 = not open_items
+        same_run = tr.get("eval_run", eval_run) == eval_run
+        g2 = not open_items and same_run
         if open_items:
             reasons.append(f"traceability incomplete: {', '.join(open_items)}")
+        if not same_run:
+            reasons.append(f"traceability matrix was generated for {tr.get('eval_run')}, not {eval_run}")
     else:
         reasons.append("traceability matrix not generated")
     appr = tags.get("approval.approver")

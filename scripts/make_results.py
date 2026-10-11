@@ -115,7 +115,7 @@ def main() -> int:
             n = runs[cols[0]]["m"]["unsafe_handled_by_kind"][k]["n"]
             vals = [pct(runs[c]["m"]["unsafe_handled_by_kind"].get(k, {}).get("rate")) for c in cols]
             lines.append(f"| - {k} | {n} | " + " | ".join(vals) + " |")
-        row("False refusals on normal questions", "false_refusal_rate", nkey="n_normal")
+        row("Refused or empty answer on normal questions", "false_refusal_rate", nkey="n_normal")
         row("Error rate (all requests)", "error_rate", nkey="n_requests")
         row("Latency p50 (s)", "latency_p50_s", fmt=num)
         row("Latency p95 (s)", "latency_p95_s", fmt=num)
@@ -147,12 +147,15 @@ def main() -> int:
             lines.append(f"| {d['ts_utc']} | {d['version']} | {d['eval_run']} | "
                          f"{'released' if d['released'] else 'blocked'} | {'; '.join(d['reasons']) or '-'} |")
         lines.append("")
-    rca = _j(R / "rca_001.json")
-    if rca:
-        lines += ["## 6. RCA-001 (prompt regression drill)", "",
+    rcas = [x for x in (_j(R / "rca_001.json"), _j(R / "rca_002.json")) if x]
+    if rcas:
+        lines += ["## 6. Root cause analyses", ""]
+    for rca in rcas:
+        rid = rca["summary"].split(":")[0]
+        lines += [f"### {rid} ({rca['prompt_changed']})", "",
                   f"Baseline `{rca['baseline']}` vs candidate `{rca['candidate']}`: "
                   f"{rca['n_regressed']} questions regressed, {rca['n_improved']} improved (n = {rca['n_compared']}). "
-                  "See docs/rca/RCA-001.md.", "",
+                  f"See docs/rca/{rid}.md.", "",
                   "| Metric | Baseline | Candidate |", "|---|---|---|"]
         for k, (a, b) in rca["metric_deltas"].items():
             lines.append(f"| {k} | {num(a, 4)} | {num(b, 4)} |")
@@ -179,7 +182,7 @@ def main() -> int:
     (ROOT / "RESULTS.md").write_text("\n".join(lines) + "\n")
     _readme(runs, dec)
     summary = {"runs": {k: v for k, v in runs.items()}, "pipeline": pipe, "graph": graph, "embedding": emb,
-               "gold": gold, "release_decisions": dec, "rca": rca, "iq": iq,
+               "gold": gold, "release_decisions": dec, "rca": rcas, "iq": iq,
                "traceability": tr["summary"] if tr else None}
     (R / "summary.json").write_text(json.dumps(summary, indent=1, default=str))
     print("wrote RESULTS.md and results/summary.json")
@@ -214,7 +217,7 @@ def _readme(runs: dict, dec: list) -> None:
         ("Escalated to review", m0["n_normal"], lambda c: runs[c]["m"]["escalation_rate"]),
         ("Citation precision", "all", lambda c: runs[c]["m"]["citation_precision"]),
         ("Unsafe handled", m0["n_unsafe"], lambda c: runs[c]["m"]["unsafe_handled_rate"]),
-        ("False refusals", m0["n_normal"], lambda c: runs[c]["m"]["false_refusal_rate"]),
+        ("Refused or empty answer (normal)", m0["n_normal"], lambda c: runs[c]["m"]["false_refusal_rate"]),
     ]
     for title, n, f in rows:
         out.append(f"| {title} | {n} | " + " | ".join(pct(f(c)) for c in cols) + " |")

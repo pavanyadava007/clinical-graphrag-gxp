@@ -74,7 +74,7 @@ def gold():
 
 @app.command()
 def ask(question: str, system: str = typer.Option("C", help="A, B or C"),
-        model: str = typer.Option(None, help="Ollama model"), answer_prompt: int = 1,
+        model: str = typer.Option(None, help="Ollama model"), answer_prompt: int = 1, cypher_prompt: int = 1,
         brief: bool = typer.Option(False, help="short human-readable output")):
     """Ask one question and print the answer with citations, route, Cypher and trace id."""
     from cgg.systems.base import SystemConfig
@@ -85,6 +85,7 @@ def ask(question: str, system: str = typer.Option("C", help="A, B or C"),
     if model:
         cfg.model = model
     cfg.prompts["answer"] = answer_prompt
+    cfg.prompts["text2cypher"] = cypher_prompt
     tracer = Tracer()
     r = SYSTEMS[system](cfg, tracer).ask(question)
     tracer.flush()
@@ -167,7 +168,8 @@ def versions():
 
 @app.command("eval")
 def eval_(system: str = typer.Option(..., help="A, B or C"), run: str = typer.Option(..., help="run name"),
-          model: str = typer.Option(None), answer_prompt: int = 1, repeats: int = 2, variants: bool = True,
+          model: str = typer.Option(None), answer_prompt: int = 1, cypher_prompt: int = 1, repeats: int = 2,
+          variants: bool = True,
           limit: int = typer.Option(None, help="smoke test on the first N gold questions"),
           log_mlflow: bool = True):
     """Evaluate a system on the gold + safety sets (resumable) and log the run to MLflow."""
@@ -178,6 +180,7 @@ def eval_(system: str = typer.Option(..., help="A, B or C"), run: str = typer.Op
     if model:
         cfg.model = model
     cfg.prompts["answer"] = answer_prompt
+    cfg.prompts["text2cypher"] = cypher_prompt
     m = run_eval(system, run, cfg, repeats=repeats, variants=variants, limit=limit)
     if log_mlflow:
         from cgg.tracking import log_eval_run

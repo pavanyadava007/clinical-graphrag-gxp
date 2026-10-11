@@ -125,7 +125,7 @@ button { font: inherit; background: var(--surface-2); color: var(--text); border
     (guard, route, query or retrieval, generation, citation check).</p>
   <div class="cards" id="examples"></div>
 
-  <h2>Root cause analysis drill (RCA-001)</h2>
+  <h2>Root cause analyses and change control</h2>
   <div id="rca"></div>
 
   <h2>Traceability matrix</h2>
@@ -199,7 +199,7 @@ const metricRows = [["accuracy", "Accuracy (auto-released)", "n_normal"], ["prec
   ["citation_precision", "Citation precision", "n_citations"], ["ungrounded_answer_rate", "Ungrounded released answers"],
   ["repeat_agreement", "Repeat agreement (3 runs)", "n_repeat"], ["paraphrase_agreement", "Paraphrase agreement", "n_paraphrase"],
   ["typo_accuracy_drop", "Typo accuracy drop", "n_typo"], ["unsafe_handled_rate", "Unsafe handled", "n_unsafe"],
-  ["false_refusal_rate", "False refusals", "n_normal"], ["error_rate", "Error rate", "n_requests"],
+  ["false_refusal_rate", "Refused or empty answer (normal questions)", "n_normal"], ["error_rate", "Error rate", "n_requests"],
   ["latency_p50_s", "Latency p50 (s)"], ["latency_p95_s", "Latency p95 (s)"], ["llm_calls_mean", "LLM calls / request"]];
 $("fulltable").innerHTML = `<table><tr><th>Metric</th>${keys.map((k) => `<th class="num">${esc(runs[k].label)}<br>` +
   `<span style="font-weight:400">${esc(runs[k].model)}</span></th>`).join("")}</tr>` +
@@ -235,12 +235,12 @@ $("examples").innerHTML = (D.examples || []).map((e) => {
     `<div class="kv">trace <code>${esc(e.trace_id)}</code></div></div>`;
 }).join("");
 
-const rca = D.summary.rca;
-if (rca) {
-  $("rca").innerHTML = `<p>${esc(rca.summary)}</p><div class="scroll"><table><tr><th>Metric</th><th class=num>Baseline (answer@v1)</th><th class=num>Candidate (answer@v2)</th></tr>` +
+const rcas = D.summary.rca || [];
+$("rca").innerHTML = rcas.length ? rcas.map((rca) => { const id = rca.summary.split(":")[0];
+  return `<h3>${esc(id)}: ${esc(rca.prompt_changed)}</h3><p>${esc(rca.summary)}</p><div class="scroll"><table><tr><th>Metric</th>` +
+    `<th class=num>Baseline</th><th class=num>Candidate</th></tr>` +
     Object.entries(rca.metric_deltas).map(([k, [a, b]]) => `<tr><td>${esc(k)}</td><td class="num">${fmt(a)}</td><td class="num">${fmt(b)}</td></tr>`).join("") +
-    `</table></div><p>Full report: <a href="${D.repo}/blob/main/docs/rca/RCA-001.md">docs/rca/RCA-001.md</a>.</p>`;
-} else { $("rca").innerHTML = "<p>Not run yet.</p>"; }
+    `</table></div><p>Report: <a href="${D.repo}/blob/main/docs/rca/${id}.md">docs/rca/${id}.md</a></p>`; }).join("") : "<p>Not run yet.</p>";
 
 const tr = D.traceability;
 if (tr) {

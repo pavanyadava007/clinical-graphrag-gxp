@@ -20,7 +20,12 @@ LINEAGE_KEYS = ["git_commit", "eval_run_id", "eval_run_name", "gold_set_sha256",
 
 
 def _mlflow():
+    import logging
+
     import mlflow
+
+    for name in ("mlflow", "alembic"):
+        logging.getLogger(name).setLevel(logging.WARNING)
 
     mlflow.set_tracking_uri(config.MLFLOW_URI)
     return mlflow

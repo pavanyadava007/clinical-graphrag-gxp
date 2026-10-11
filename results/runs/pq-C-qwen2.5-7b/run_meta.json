@@ -1,0 +1,20 @@
+{
+ "run": "pq-C-qwen2.5-7b",
+ "system": "C_guarded_graphrag",
+ "started_utc": "2026-10-11T07:14:51.063961+00:00",
+ "params": {
+  "model": "qwen2.5:7b",
+  "temperature": 0.0,
+  "seed": 7,
+  "top_k": 6,
+  "prompt.router": "router@v1",
+  "prompt.text2cypher": "text2cypher@v1",
+  "prompt.answer": "answer@v1",
+  "prompt.safety": "safety@v1"
+ },
+ "tracing_backend": "langfuse",
+ "n_planned": 417,
+ "llm_host": "http://127.0.0.1:11502",
+ "llm_digest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e",
+ "git_commit": "83e6b57f3be4a1ba7eda4f9faeb7c4e3bf5c73ca"
+}
