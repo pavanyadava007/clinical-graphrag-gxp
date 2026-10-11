@@ -1,0 +1,9 @@
+{
+ "model": "nomic-embed-text",
+ "model_digest": "0a109f422b47e3a30ba2b10eca18548e944e8a23073ee3f3e947efcf3c45e59f",
+ "n_chunks": 13128,
+ "dims": 768,
+ "embeddings_sha256": "362083510fd6dd2399acf690bf0952479c948446eeab01cdc06e8ce083a68286",
+ "gold_chunks_delta_version": 0,
+ "seconds": 89.5
+}

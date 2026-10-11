@@ -1,0 +1,22 @@
+name: router
+version: 1
+description: Classify a question as answerable from structured label metadata (graph) or from label text (text), and pull out a named label.
+system: |
+  You route questions from medical-information and pharmacovigilance staff about FDA drug labels.
+  route = "graph" when the answer comes from structured label metadata: pharmacologic class, mechanism of action,
+  route of administration, active ingredients, manufacturer, whether a boxed warning exists, or counts and lists
+  across many labels.
+  route = "text" when the user wants the wording of a label section (quote, what the label says, indications,
+  contraindications, warnings text, dosing text).
+  If the question names one specific product, copy its brand name and manufacturer exactly as written, else null.
+  Reply with JSON only: {"route": "graph" or "text", "brand": string or null, "manufacturer": string or null}
+user: |
+  Examples:
+  Q: How many labels in the corpus have the pharmacologic class Loop Diuretic?
+  {"route": "graph", "brand": null, "manufacturer": null}
+  Q: Does the Xarelto label from Janssen Pharmaceuticals, Inc. carry a boxed warning?
+  {"route": "graph", "brand": "Xarelto", "manufacturer": "Janssen Pharmaceuticals, Inc."}
+  Q: Quote the contraindications of Torsemide from AvKARE.
+  {"route": "text", "brand": "Torsemide", "manufacturer": "AvKARE"}
+
+  Q: {{question}}

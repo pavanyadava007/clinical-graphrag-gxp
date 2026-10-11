@@ -1,0 +1,32 @@
+{
+ "nodes": 4491,
+ "edges": 5964,
+ "load_s": 2.2,
+ "neo4j_snapshot_sha256": "4a04e212ec9f6007c12305932e9c9492483ab5dec8490b486cd21c540f6299ed",
+ "gold_snapshot_sha256": "4a04e212ec9f6007c12305932e9c9492483ab5dec8490b486cd21c540f6299ed",
+ "match": true,
+ "gold_delta_versions": {
+  "gold.kg_nodes": 0,
+  "gold.kg_edges": 0
+ },
+ "counts_in_neo4j": {
+  "nodes": {
+   "Manufacturer": 111,
+   "MoA": 26,
+   "PharmClass": 25,
+   "Route": 6,
+   "Section": 3923,
+   "Substance": 79,
+   "Label": 321
+  },
+  "edges": {
+   "CONTAINS": 485,
+   "HAS_MOA": 247,
+   "HAS_ROUTE": 322,
+   "HAS_SECTION": 3923,
+   "IN_CLASS": 388,
+   "MADE_BY": 321,
+   "MENTIONS_INTERACTION_WITH": 278
+  }
+ }
+}

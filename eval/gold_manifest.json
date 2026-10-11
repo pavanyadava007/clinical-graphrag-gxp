@@ -1,0 +1,36 @@
+{
+ "n_questions": 179,
+ "seed": 20261011,
+ "sha256": "2163918b0acb866760d0832fe769504035d877ce72c2de86b9dae45c5c19c74f",
+ "by_template": {
+  "S1": 15,
+  "S2": 15,
+  "S3": 15,
+  "S4": 15,
+  "Q1": 10,
+  "Q2": 10,
+  "Q3": 10,
+  "A1": 15,
+  "A2": 14,
+  "A3": 15,
+  "A4": 15,
+  "A5": 15,
+  "A6": 15
+ },
+ "subset_size": 52,
+ "source": {
+  "silver.labels": {
+   "rows": 321,
+   "delta_table": "silver.labels",
+   "delta_version": 0,
+   "sha256": "3013e5c0116a0bd38c7e34eafb26ff16f518cc6644b360768b84281944983949"
+  },
+  "silver.sections": {
+   "rows": 3923,
+   "delta_table": "silver.sections",
+   "delta_version": 0,
+   "sha256": "de8a21445090115dac8b7269695b629200e915add88b01c5183b2e8584aac41e"
+  }
+ },
+ "method": "deterministic templates over structured openFDA fields; no LLM"
+}

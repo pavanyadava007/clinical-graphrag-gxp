@@ -1,0 +1,18 @@
+# Role assignments for controlled access (demo identities, not authenticated).
+# Segregation of duties: the author of a model version cannot approve it (enforced in cgg.release).
+users:
+  pavan.dev:
+    name: Pavan (developer)
+    roles: [developer]
+  qa.approver:
+    name: QA approver (demo identity)
+    roles: [qa_approver]
+  release.manager:
+    name: Release manager (demo identity)
+    roles: [release_manager]
+  med.reviewer:
+    name: Medical information reviewer (demo identity)
+    roles: [medical_reviewer]
+  oracle-reviewer:
+    name: Automated oracle reviewer used for the measured HITL run (answers from the gold set)
+    roles: [medical_reviewer]

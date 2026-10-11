@@ -1,0 +1,108 @@
+{
+ "ingest_run_id": "20261011T052914Z-d567b8",
+ "spark_version": "3.5.3",
+ "bronze": {
+  "rows": 374
+ },
+ "silver": {
+  "label_records_in": 374,
+  "duplicate_records_removed": 31,
+  "labels_passed": 321,
+  "labels_quarantined": 22,
+  "sections_passed": 3923,
+  "sections_quarantined": 7,
+  "expectations": {
+   "set_id_present": {
+    "action": "quarantine",
+    "urs": "URS-004",
+    "failed": 0
+   },
+   "version_positive": {
+    "action": "quarantine",
+    "urs": "URS-004",
+    "failed": 0
+   },
+   "effective_date_valid": {
+    "action": "quarantine",
+    "urs": "URS-004",
+    "failed": 0
+   },
+   "brand_and_generic_present": {
+    "action": "quarantine",
+    "urs": "URS-004",
+    "failed": 0
+   },
+   "manufacturer_present": {
+    "action": "quarantine",
+    "urs": "URS-004",
+    "failed": 0
+   },
+   "rx_label": {
+    "action": "quarantine",
+    "urs": "URS-004",
+    "failed": 0
+   },
+   "epc_in_scope": {
+    "action": "quarantine",
+    "urs": "URS-004",
+    "failed": 22
+   },
+   "has_indications_section": {
+    "action": "warn",
+    "urs": "URS-004",
+    "failed": 2
+   },
+   "route_present": {
+    "action": "warn",
+    "urs": "URS-004",
+    "failed": 0
+   },
+   "section_text_not_empty": {
+    "action": "quarantine",
+    "urs": "URS-004",
+    "failed": 7
+   },
+   "section_text_not_truncated": {
+    "action": "quarantine",
+    "urs": "URS-004",
+    "failed": 0
+   }
+  }
+ },
+ "gold": {
+  "chunks": 13128,
+  "kg_nodes": 4491,
+  "kg_edges": 5964,
+  "kg_nodes_by_label": {
+   "Route": 6,
+   "Label": 321,
+   "Manufacturer": 111,
+   "PharmClass": 25,
+   "Section": 3923,
+   "MoA": 26,
+   "Substance": 79
+  },
+  "kg_edges_by_rel": {
+   "HAS_SECTION": 3923,
+   "CONTAINS": 485,
+   "HAS_ROUTE": 322,
+   "MENTIONS_INTERACTION_WITH": 278,
+   "HAS_MOA": 247,
+   "IN_CLASS": 388,
+   "MADE_BY": 321
+  },
+  "kg_snapshot_sha256": "4a04e212ec9f6007c12305932e9c9492483ab5dec8490b486cd21c540f6299ed"
+ },
+ "delta_versions": {
+  "bronze.labels": 0,
+  "silver.labels": 0,
+  "silver.sections": 0,
+  "silver.quarantine": 0,
+  "gold.chunks": 0,
+  "gold.kg_nodes": 0,
+  "gold.kg_edges": 0
+ },
+ "duration_s": 30.4,
+ "delta_spark_version": "3.2.1",
+ "raw_manifest_sha256": "161add0049fc0deccfb56f4fa20116c2a2f6affb63f8b59f6081d43d8a3cd906"
+}
