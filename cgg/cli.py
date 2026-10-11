@@ -74,7 +74,8 @@ def gold():
 
 @app.command()
 def ask(question: str, system: str = typer.Option("C", help="A, B or C"),
-        model: str = typer.Option(None, help="Ollama model"), answer_prompt: int = 1):
+        model: str = typer.Option(None, help="Ollama model"), answer_prompt: int = 1,
+        brief: bool = typer.Option(False, help="short human-readable output")):
     """Ask one question and print the answer with citations, route, Cypher and trace id."""
     from cgg.systems.base import SystemConfig
     from cgg.systems.qa import SYSTEMS
@@ -88,10 +89,80 @@ def ask(question: str, system: str = typer.Option("C", help="A, B or C"),
     r = SYSTEMS[system](cfg, tracer).ask(question)
     tracer.flush()
     d = r.to_dict()
+    if brief:
+        _brief(d, tracer.backend)
+        return
     d.pop("spans")
     d["rows"] = (d["rows"] or [])[:10] if d["rows"] is not None else None
     d["tracing_backend"] = tracer.backend
     _print(d)
+
+
+def _brief(d: dict, backend: str) -> None:
+    import textwrap
+
+    typer.echo(f"status : {d['status']}   route: {d['route']}   latency: {d['latency_s']:.1f} s   "
+               f"LLM calls: {d['llm_calls']}")
+    if d["cypher"]:
+        typer.echo("cypher : " + textwrap.fill(d["cypher"], 100, subsequent_indent="         "))
+    ans = d["answer"]
+    ans = json.dumps(ans) if not isinstance(ans, str) else ans
+    typer.echo("answer : " + textwrap.fill(ans[:600], 100, subsequent_indent="         "))
+    for c in (d["citations"] or [])[:2]:
+        typer.echo(f"cite   : {c.get('set_id')} / {c.get('section')}")
+        typer.echo("         \"" + textwrap.fill(str(c.get("quote"))[:300], 92, subsequent_indent="          ") + "\"")
+    chk = d["checks"].get("citation_check")
+    if chk:
+        typer.echo(f"check  : {chk['n_valid']}/{chk['n']} citations verified against the label text")
+    if d["reason"]:
+        typer.echo(f"reason : {d['reason']}")
+    typer.echo(f"trace  : {d['trace_id']} ({backend})")
+
+
+@app.command()
+def status():
+    """Live check of the data layer: Delta versions, quarantine counts, Neo4j snapshot hash vs gold tables."""
+    from cgg import config
+    from cgg.graph.store import counts, neo4j_snapshot_hash
+
+    rep = json.loads((config.RESULTS / "pipeline_report.json").read_text())
+    s = rep["silver"]
+    typer.echo(f"ingest run      : {rep['ingest_run_id']}  (Spark {rep['spark_version']}, "
+               f"delta-spark {rep['delta_spark_version']}, local)")
+    typer.echo("delta versions  : " + ", ".join(f"{k}={v}" for k, v in rep["delta_versions"].items()))
+    typer.echo(f"labels          : {rep['bronze']['rows']} raw records -> {s['duplicate_records_removed']} duplicates "
+               f"removed -> {s['labels_passed']} passed, {s['labels_quarantined']} quarantined")
+    typer.echo(f"sections/chunks : {s['sections_passed']} sections, {rep['gold']['chunks']} chunks")
+    c = counts()
+    typer.echo(f"neo4j           : {sum(c['nodes'].values())} nodes, {sum(c['edges'].values())} relationships")
+    live = neo4j_snapshot_hash()
+    gold = rep["gold"]["kg_snapshot_sha256"]
+    typer.echo(f"snapshot hash   : neo4j {live[:16]}  gold tables {gold[:16]}  "
+               f"{'MATCH' if live == gold else 'MISMATCH'}")
+
+
+@app.command()
+def versions():
+    """Registered model versions with aliases, approval and key lineage tags (MLflow registry)."""
+    from mlflow import MlflowClient
+
+    from cgg import config
+    from cgg.tracking import _mlflow
+
+    _mlflow()
+    client = MlflowClient()
+    rm = client.get_registered_model(config.REGISTERED_MODEL)
+    alias = {}
+    for a, v in (rm.aliases or {}).items():
+        alias.setdefault(str(v), []).append(a)
+    for v in sorted(client.search_model_versions(f"name='{config.REGISTERED_MODEL}'"), key=lambda x: int(x.version)):
+        t = v.tags
+        typer.echo(f"v{v.version}  aliases={alias.get(str(v.version), [])}  author={t.get('author')}  "
+                   f"approved_by={t.get('approval.approver', '-')}  status={t.get('validation_status')}")
+        typer.echo(f"    eval_run={t.get('eval_run_name')}  prompt={t.get('prompt.answer')}  "
+                   f"llm={t.get('llm_model')}@{str(t.get('llm_digest'))[:12]}")
+        typer.echo(f"    git={str(t.get('git_commit'))[:12]}  kg={str(t.get('kg_snapshot_sha256'))[:12]}  "
+                   f"gold={str(t.get('gold_set_sha256'))[:12]}  silver.labels@v{t.get('delta.silver.labels.version')}")
 
 
 @app.command("eval")
@@ -121,6 +192,14 @@ def metrics(run: str):
     from cgg.evaluate import compute
 
     _print(compute(run))
+
+
+@app.command("log-run")
+def log_run(run: str):
+    """Log a finished evaluation run to MLflow (params, datasets, metrics, per-question table, trace ids)."""
+    from cgg.tracking import log_eval_run
+
+    typer.echo(log_eval_run(run))
 
 
 @review_app.command("list")

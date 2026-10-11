@@ -105,7 +105,8 @@ def gates(version: int) -> dict:
     if not g5:
         reasons.append(f"audit trail broken at seq {av.get('first_bad_seq')}")
     return {"G1_acceptance_criteria": g1, "G2_traceability": g2, "G3_approval": g3, "G4_lineage": g4,
-            "G5_audit_trail": g5, "criteria": crit, "reasons": reasons, "eval_run": eval_run}
+            "G5_audit_trail": g5, "criteria": crit, "reasons": reasons, "eval_run": eval_run,
+            "audit_head_hash": av.get("head_hash")}
 
 
 def release(version: int, as_user: str | None = None, dry_run: bool = False) -> dict:
@@ -124,6 +125,7 @@ def release(version: int, as_user: str | None = None, dry_run: bool = False) -> 
     decision = {"version": version, "requested_by": user, "ts_utc": ts, "released": bool(ok and not dry_run),
                 "dry_run": dry_run, "previous_production": prev, "eval_run": g["eval_run"],
                 "gates": {k: v for k, v in g.items() if k.startswith("G")}, "reasons": g["reasons"],
+                "audit_head_hash_at_decision": g["audit_head_hash"],
                 "criteria": [{k: c[k] for k in ("id", "metric", "op", "threshold", "value", "pass")}
                              for c in g["criteria"]]}
     if ok and not dry_run:

@@ -110,5 +110,5 @@ def test_review_queue_decisions(tmp_path):
     with pytest.raises(ValueError):
         q.decide(rid, "approve", "again", "med.reviewer")
     acts = [e["action"] for e in audit.read()]
-    assert acts == ["hitl.submit", "hitl.edit"]
+    assert acts == ["hitl.submit", "access.denied", "hitl.edit"]
     assert audit.verify()["ok"]

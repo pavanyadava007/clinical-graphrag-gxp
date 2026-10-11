@@ -91,3 +91,13 @@ def test_canonical_ignores_list_order():
     a = {"status": "answered", "answer": ["b", "A"]}
     b = {"status": "answered", "answer": ["a", "B"]}
     assert canonical(a) == canonical(b)
+
+
+@pytest.mark.req("URS-020")
+def test_truncated_json_reply_is_unwrapped_and_adverbs_match():
+    from cgg.metrics import unwrap
+
+    raw = '{"answer": ["glyburide", "metformin hydrochloride"], "citations": [{"set_id": "x", "quo'
+    assert unwrap(raw) == ["glyburide", "metformin hydrochloride"]
+    q = {"answer_type": "set", "gold": ["SUBCUTANEOUS"]}
+    assert score(q, {"status": "answered", "answer": "subcutaneously"})["correct"]

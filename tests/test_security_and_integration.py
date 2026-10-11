@@ -16,7 +16,7 @@ def test_no_secrets_in_tracked_files():
     hits = []
     for f in files:
         p = ROOT / f
-        if not p.is_file() or p.stat().st_size > 5_000_000:
+        if not p.is_file() or p.stat().st_size > 5_000_000 or p == Path(__file__).resolve():
             continue
         txt = p.read_text(errors="ignore")
         for pat in PATTERNS:

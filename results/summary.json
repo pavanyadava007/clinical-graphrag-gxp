@@ -1,0 +1,365 @@
+{
+ "runs": {
+  "pq-A-llama3.1-8b": {
+   "label": "A vector RAG",
+   "model": "llama3.1:8b",
+   "m": {
+    "n_normal": 179,
+    "n_unsafe": 30,
+    "accuracy": 0.4078,
+    "accuracy_excl_S3": 0.4451,
+    "n_excl_S3": 164,
+    "precision_auto": 0.4078,
+    "n_answered": 179,
+    "escalation_rate": 0.0,
+    "n_escalated": 0,
+    "silent_error_rate": 0.5922,
+    "accuracy_after_review": 0.4078,
+    "accuracy_by_category": {
+     "aggregate_heldout": {
+      "acc": 0.0,
+      "n": 30
+     },
+     "aggregate_seen": {
+      "acc": 0.1356,
+      "n": 59
+     },
+     "quote": {
+      "acc": 0.8333,
+      "n": 30
+     },
+     "single_fact": {
+      "acc": 0.6667,
+      "n": 60
+     }
+    },
+    "accuracy_by_template": {
+     "A1": {
+      "acc": 0.1333,
+      "n": 15
+     },
+     "A2": {
+      "acc": 0.0,
+      "n": 14
+     },
+     "A3": {
+      "acc": 0.0667,
+      "n": 15
+     },
+     "A4": {
+      "acc": 0.3333,
+      "n": 15
+     },
+     "A5": {
+      "acc": 0.0,
+      "n": 15
+     },
+     "A6": {
+      "acc": 0.0,
+      "n": 15
+     },
+     "Q1": {
+      "acc": 0.8,
+      "n": 10
+     },
+     "Q2": {
+      "acc": 0.8,
+      "n": 10
+     },
+     "Q3": {
+      "acc": 0.9,
+      "n": 10
+     },
+     "S1": {
+      "acc": 0.8,
+      "n": 15
+     },
+     "S2": {
+      "acc": 1.0,
+      "n": 15
+     },
+     "S3": {
+      "acc": 0.0,
+      "n": 15
+     },
+     "S4": {
+      "acc": 0.8667,
+      "n": 15
+     }
+    },
+    "set_f1_mean": 0.4615,
+    "n_set_questions": 104,
+    "citation_precision": 0.8842,
+    "n_citations": 423,
+    "ungrounded_answer_rate": 0.095,
+    "n_ungrounded": 17,
+    "repeat_agreement": 1.0,
+    "n_repeat": 52,
+    "n_repeat_runs": 3,
+    "paraphrase_agreement": 0.8462,
+    "paraphrase_accuracy": 0.5192,
+    "n_paraphrase": 52,
+    "subset_accuracy_original": 0.4423,
+    "typo_accuracy": 0.2692,
+    "typo_accuracy_drop": 0.1731,
+    "n_typo": 52,
+    "unsafe_handled_rate": 0.4333,
+    "unsafe_handled_by_kind": {
+     "harmful": {
+      "rate": 1.0,
+      "n": 4
+     },
+     "injection": {
+      "rate": 0.375,
+      "n": 8
+     },
+     "off_label": {
+      "rate": 0.5,
+      "n": 6
+     },
+     "out_of_domain": {
+      "rate": 0.75,
+      "n": 4
+     },
+     "patient_specific": {
+      "rate": 0.0,
+      "n": 8
+     }
+    },
+    "false_refusal_rate": 0.0056,
+    "n_false_refusals": 1,
+    "n_requests": 417,
+    "error_rate": 0.0,
+    "n_errors": 0,
+    "n_timeouts": 0,
+    "latency_p50_s": 4.811,
+    "latency_p95_s": 14.619,
+    "llm_calls_mean": 1,
+    "tokens_mean": 2218.0,
+    "run": "pq-A-llama3.1-8b",
+    "system": "A_vector_rag",
+    "params": {
+     "model": "llama3.1:8b",
+     "temperature": 0.0,
+     "seed": 7,
+     "top_k": 6,
+     "prompt.router": "router@v1",
+     "prompt.text2cypher": "text2cypher@v1",
+     "prompt.answer": "answer@v1",
+     "prompt.safety": "safety@v1"
+    },
+    "tracing_backend": "langfuse"
+   }
+  }
+ },
+ "pipeline": {
+  "ingest_run_id": "20261011T052914Z-d567b8",
+  "spark_version": "3.5.3",
+  "bronze": {
+   "rows": 374
+  },
+  "silver": {
+   "label_records_in": 374,
+   "duplicate_records_removed": 31,
+   "labels_passed": 321,
+   "labels_quarantined": 22,
+   "sections_passed": 3923,
+   "sections_quarantined": 7,
+   "expectations": {
+    "set_id_present": {
+     "action": "quarantine",
+     "urs": "URS-004",
+     "failed": 0
+    },
+    "version_positive": {
+     "action": "quarantine",
+     "urs": "URS-004",
+     "failed": 0
+    },
+    "effective_date_valid": {
+     "action": "quarantine",
+     "urs": "URS-004",
+     "failed": 0
+    },
+    "brand_and_generic_present": {
+     "action": "quarantine",
+     "urs": "URS-004",
+     "failed": 0
+    },
+    "manufacturer_present": {
+     "action": "quarantine",
+     "urs": "URS-004",
+     "failed": 0
+    },
+    "rx_label": {
+     "action": "quarantine",
+     "urs": "URS-004",
+     "failed": 0
+    },
+    "epc_in_scope": {
+     "action": "quarantine",
+     "urs": "URS-004",
+     "failed": 22
+    },
+    "has_indications_section": {
+     "action": "warn",
+     "urs": "URS-004",
+     "failed": 2
+    },
+    "route_present": {
+     "action": "warn",
+     "urs": "URS-004",
+     "failed": 0
+    },
+    "section_text_not_empty": {
+     "action": "quarantine",
+     "urs": "URS-004",
+     "failed": 7
+    },
+    "section_text_not_truncated": {
+     "action": "quarantine",
+     "urs": "URS-004",
+     "failed": 0
+    }
+   }
+  },
+  "gold": {
+   "chunks": 13128,
+   "kg_nodes": 4491,
+   "kg_edges": 5964,
+   "kg_nodes_by_label": {
+    "Route": 6,
+    "Label": 321,
+    "Manufacturer": 111,
+    "PharmClass": 25,
+    "Section": 3923,
+    "MoA": 26,
+    "Substance": 79
+   },
+   "kg_edges_by_rel": {
+    "HAS_SECTION": 3923,
+    "CONTAINS": 485,
+    "HAS_ROUTE": 322,
+    "MENTIONS_INTERACTION_WITH": 278,
+    "HAS_MOA": 247,
+    "IN_CLASS": 388,
+    "MADE_BY": 321
+   },
+   "kg_snapshot_sha256": "4a04e212ec9f6007c12305932e9c9492483ab5dec8490b486cd21c540f6299ed"
+  },
+  "delta_versions": {
+   "bronze.labels": 0,
+   "silver.labels": 0,
+   "silver.sections": 0,
+   "silver.quarantine": 0,
+   "gold.chunks": 0,
+   "gold.kg_nodes": 0,
+   "gold.kg_edges": 0
+  },
+  "duration_s": 30.4,
+  "delta_spark_version": "3.2.1",
+  "raw_manifest_sha256": "161add0049fc0deccfb56f4fa20116c2a2f6affb63f8b59f6081d43d8a3cd906"
+ },
+ "graph": {
+  "nodes": 4491,
+  "edges": 5964,
+  "load_s": 2.2,
+  "neo4j_snapshot_sha256": "4a04e212ec9f6007c12305932e9c9492483ab5dec8490b486cd21c540f6299ed",
+  "gold_snapshot_sha256": "4a04e212ec9f6007c12305932e9c9492483ab5dec8490b486cd21c540f6299ed",
+  "match": true,
+  "gold_delta_versions": {
+   "gold.kg_nodes": 0,
+   "gold.kg_edges": 0
+  },
+  "counts_in_neo4j": {
+   "nodes": {
+    "Manufacturer": 111,
+    "MoA": 26,
+    "PharmClass": 25,
+    "Route": 6,
+    "Section": 3923,
+    "Substance": 79,
+    "Label": 321
+   },
+   "edges": {
+    "CONTAINS": 485,
+    "HAS_MOA": 247,
+    "HAS_ROUTE": 322,
+    "HAS_SECTION": 3923,
+    "IN_CLASS": 388,
+    "MADE_BY": 321,
+    "MENTIONS_INTERACTION_WITH": 278
+   }
+  }
+ },
+ "embedding": {
+  "model": "nomic-embed-text",
+  "model_digest": "0a109f422b47e3a30ba2b10eca18548e944e8a23073ee3f3e947efcf3c45e59f",
+  "n_chunks": 13128,
+  "dims": 768,
+  "embeddings_sha256": "362083510fd6dd2399acf690bf0952479c948446eeab01cdc06e8ce083a68286",
+  "gold_chunks_delta_version": 0,
+  "seconds": 89.5
+ },
+ "gold": {
+  "n_questions": 179,
+  "seed": 20261011,
+  "sha256": "2163918b0acb866760d0832fe769504035d877ce72c2de86b9dae45c5c19c74f",
+  "by_template": {
+   "S1": 15,
+   "S2": 15,
+   "S3": 15,
+   "S4": 15,
+   "Q1": 10,
+   "Q2": 10,
+   "Q3": 10,
+   "A1": 15,
+   "A2": 14,
+   "A3": 15,
+   "A4": 15,
+   "A5": 15,
+   "A6": 15
+  },
+  "subset_size": 52,
+  "source": {
+   "silver.labels": {
+    "rows": 321,
+    "delta_table": "silver.labels",
+    "delta_version": 0,
+    "sha256": "3013e5c0116a0bd38c7e34eafb26ff16f518cc6644b360768b84281944983949"
+   },
+   "silver.sections": {
+    "rows": 3923,
+    "delta_table": "silver.sections",
+    "delta_version": 0,
+    "sha256": "de8a21445090115dac8b7269695b629200e915add88b01c5183b2e8584aac41e"
+   }
+  },
+  "method": "deterministic templates over structured openFDA fields; no LLM"
+ },
+ "release_decisions": [],
+ "rca": null,
+ "iq": {
+  "generated_utc": "2026-10-11T05:55:18+00:00",
+  "ok": true,
+  "checks": {
+   "python": "3.11.16",
+   "package pyspark": "3.5.3 (expected 3.5.3)",
+   "package delta-spark": "3.2.1 (expected 3.2.1)",
+   "package mlflow": "3.5.1 (min 3.1)",
+   "package neo4j": "5.28.6 (min 5.20)",
+   "package langfuse": "2.60.10 (min 2.50)",
+   "java": "openjdk version \"17.0.17\" 2025-10-21 LTS",
+   "image neo4j:5-community": "sha256:5ac4722f61af",
+   "image postgres:16-alpine": "sha256:81bd698b4594",
+   "image langfuse/langfuse:2": "sha256:27c161e3979b",
+   "image ollama/ollama:latest": "sha256:2a5d04622211",
+   "ollama model llama3.1:8b": "46e0c10c039e",
+   "ollama model nomic-embed-text:latest": "0a109f422b47",
+   "neo4j": "5.26.31 community",
+   "langfuse": "HTTP 200 2.95.11",
+   "gpu": "NVIDIA L4, 23034 MiB"
+  }
+ },
+ "traceability": null
+}

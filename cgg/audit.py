@@ -49,6 +49,7 @@ def require(action: str, user: str | None = None) -> str:
     user = user or current_user()
     allowed = PERMISSIONS[action]
     if not roles_of(user) & allowed:
+        append("access.denied", action, {"needs_one_of": sorted(allowed)}, actor=user)
         raise AccessDenied(f"user '{user}' lacks a role for '{action}' (needs one of {sorted(allowed)})")
     return user
 

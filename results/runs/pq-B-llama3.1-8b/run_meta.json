@@ -1,0 +1,20 @@
+{
+ "run": "pq-B-llama3.1-8b",
+ "system": "B_graphrag",
+ "started_utc": "2026-10-11T06:25:00.853312+00:00",
+ "params": {
+  "model": "llama3.1:8b",
+  "temperature": 0.0,
+  "seed": 7,
+  "top_k": 6,
+  "prompt.router": "router@v1",
+  "prompt.text2cypher": "text2cypher@v1",
+  "prompt.answer": "answer@v1",
+  "prompt.safety": "safety@v1"
+ },
+ "tracing_backend": "langfuse",
+ "n_planned": 417,
+ "llm_host": "http://127.0.0.1:11501",
+ "llm_digest": "46e0c10c039e019119339687c3c1757cc81b9da49709a3b3924863ba87ca666e",
+ "git_commit": "428f0b17bb2b23edbd073a4ea1cd25e84ec36d55-dirty"
+}
