@@ -1,0 +1,59 @@
+{
+ "name": "C-cypher-v1",
+ "system": "C",
+ "params": {
+  "model": "llama3.1:8b",
+  "temperature": 0.0,
+  "seed": 7,
+  "top_k": 6,
+  "prompt.router": "router@v1",
+  "prompt.text2cypher": "text2cypher@v1",
+  "prompt.answer": "answer@v1",
+  "prompt.safety": "safety@v1"
+ },
+ "n": 103,
+ "accuracy": 0.7864,
+ "by_template": {
+  "A1": {
+   "acc": 1.0,
+   "n": 5
+  },
+  "A3": {
+   "acc": 1.0,
+   "n": 8
+  },
+  "A4": {
+   "acc": 0.7143,
+   "n": 14
+  },
+  "A5": {
+   "acc": 0.2308,
+   "n": 13
+  },
+  "A6": {
+   "acc": 0.875,
+   "n": 8
+  },
+  "S1": {
+   "acc": 0.7857,
+   "n": 14
+  },
+  "S2": {
+   "acc": 1.0,
+   "n": 15
+  },
+  "S3": {
+   "acc": 0.9231,
+   "n": 13
+  },
+  "S4": {
+   "acc": 0.7692,
+   "n": 13
+  }
+ },
+ "status": {
+  "answered": 91,
+  "escalated": 12
+ },
+ "set": "eval/dev_set.jsonl"
+}

@@ -3,9 +3,12 @@
 from __future__ import annotations
 
 import json
+import logging
 import sys
 
 import typer
+
+logging.disable(logging.INFO)  # keep MLflow / alembic INFO lines out of command output
 
 app = typer.Typer(add_completion=False, no_args_is_help=True, help="clinical-graphrag-gxp")
 review_app = typer.Typer(no_args_is_help=True, help="human review queue")
@@ -160,7 +163,8 @@ def versions():
         t = v.tags
         typer.echo(f"v{v.version}  aliases={alias.get(str(v.version), [])}  author={t.get('author')}  "
                    f"approved_by={t.get('approval.approver', '-')}  status={t.get('validation_status')}")
-        typer.echo(f"    eval_run={t.get('eval_run_name')}  prompt={t.get('prompt.answer')}  "
+        typer.echo(f"    eval_run={t.get('eval_run_name')}  "
+                   f"prompts={t.get('prompt.answer')},{t.get('prompt.text2cypher')}  "
                    f"llm={t.get('llm_model')}@{str(t.get('llm_digest'))[:12]}")
         typer.echo(f"    git={str(t.get('git_commit'))[:12]}  kg={str(t.get('kg_snapshot_sha256'))[:12]}  "
                    f"gold={str(t.get('gold_set_sha256'))[:12]}  silver.labels@v{t.get('delta.silver.labels.version')}")
@@ -234,26 +238,38 @@ def review_decide(review_id: int, decision: str = typer.Argument(..., help="appr
 def register(run: str = typer.Option(..., help="evaluation run backing this version"),
              as_user: str = typer.Option(None, "--as")):
     """Register system C as a new model version (models-from-code) with full lineage; alias 'candidate'."""
+    from cgg.audit import AccessDenied
     from cgg.tracking import register_model
 
-    _print(register_model(run, as_user))
+    try:
+        _print(register_model(run, as_user))
+    except AccessDenied as e:
+        _denied(e)
 
 
 @app.command()
 def approve(version: int, meaning: str = typer.Option("approved for production release"),
             as_user: str = typer.Option(None, "--as")):
     """Record a QA approval (e-signature style) on a model version. Author cannot approve."""
+    from cgg.audit import AccessDenied
     from cgg.release import approve as _approve
 
-    _print(_approve(version, meaning, as_user))
+    try:
+        _print(_approve(version, meaning, as_user))
+    except AccessDenied as e:
+        _denied(e)
 
 
 @app.command()
 def release(version: int, as_user: str = typer.Option(None, "--as"), dry_run: bool = False):
     """Promote a model version to 'production' only if every release gate passes."""
+    from cgg.audit import AccessDenied
     from cgg.release import release as _release
 
-    r = _release(version, as_user, dry_run=dry_run)
+    try:
+        r = _release(version, as_user, dry_run=dry_run)
+    except AccessDenied as e:
+        _denied(e)
     _print(r)
     if not r["released"]:
         raise typer.Exit(2)
@@ -278,11 +294,11 @@ def trace_export(run: str, n: int = 6):
 
 
 @app.command("validation-report")
-def validation_report():
+def validation_report(pq_run: str = typer.Option("pq-C-llama3.1-8b", help="PQ run the matrix is built for")):
     """Generate traceability matrix + validation summary report from code, tests and results."""
     from cgg.validation.report import generate
 
-    _print(generate())
+    _print(generate(pq_run))
 
 
 @app.command("register-prompts")
@@ -294,6 +310,11 @@ def register_prompts():
 
 def main():  # pragma: no cover
     sys.exit(app())
+
+
+def _denied(e: Exception) -> None:
+    typer.echo(f"ACCESS DENIED: {e}")
+    raise typer.Exit(3)
 
 
 if __name__ == "__main__":

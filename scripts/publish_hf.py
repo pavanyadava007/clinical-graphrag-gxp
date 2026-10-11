@@ -19,6 +19,7 @@ ROOT = Path(__file__).resolve().parent.parent
 SITE = ROOT / "site"
 SPACE_ID = "pavanyadava07/clinical-graphrag-gxp"
 REPO = "https://github.com/pavanyadava007/clinical-graphrag-gxp"
+RELEASED = "pq-C-llama3.1-8b-cypher-v2"  # eval run of the released model version
 
 SPACE_README = """---
 title: Clinical GraphRAG GxP
@@ -82,15 +83,15 @@ def build() -> None:
         "summary": summary,
         "traceability": _j(R / "traceability.json"),
         "langfuse": _j(R / "langfuse_sample.json"),
-        "examples": examples("pq-C-llama3.1-8b") if (R / "runs" / "pq-C-llama3.1-8b").exists() else [],
+        "examples": examples(RELEASED) if (R / "runs" / RELEASED).exists() else [],
         "criteria": None,
         "repo": REPO,
     }
     sys.path.insert(0, str(ROOT))
     from cgg.release import evaluate_criteria
 
-    if "pq-C-llama3.1-8b" in summary["runs"]:
-        data["criteria"] = evaluate_criteria(summary["runs"]["pq-C-llama3.1-8b"]["m"])
+    data["criteria"] = [{"run": r, "label": summary["runs"][r]["label"], "criteria": evaluate_criteria(
+        summary["runs"][r]["m"])} for r in ("pq-C-llama3.1-8b", RELEASED) if r in summary["runs"]]
     shutil.rmtree(SITE, ignore_errors=True)
     SITE.mkdir()
     (SITE / "README.md").write_text(SPACE_README)

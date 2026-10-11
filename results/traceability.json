@@ -1,7 +1,7 @@
 {
- "generated_utc": "2026-10-11T07:16:35+00:00",
- "eval_run": "pq-C-llama3.1-8b",
- "mlflow_run_id": "87b6512027bd498189587ca4eb47e6f1",
+ "generated_utc": "2026-10-11T08:45:52+00:00",
+ "eval_run": "pq-C-llama3.1-8b-cypher-v2",
+ "mlflow_run_id": "63a20b00a1bb41879320f5d44a71e3aa",
  "rows": [
   {
    "urs": "URS-001",
@@ -23,7 +23,7 @@
    ],
    "pq": [],
    "mlflow_run": "",
-   "release": "not released yet",
+   "release": "model version 3 (production)",
    "status": "verified"
   },
   {
@@ -46,7 +46,7 @@
    ],
    "pq": [],
    "mlflow_run": "",
-   "release": "not released yet",
+   "release": "model version 3 (production)",
    "status": "verified"
   },
   {
@@ -66,7 +66,7 @@
    ],
    "pq": [],
    "mlflow_run": "",
-   "release": "not released yet",
+   "release": "model version 3 (production)",
    "status": "verified"
   },
   {
@@ -89,7 +89,7 @@
    ],
    "pq": [],
    "mlflow_run": "",
-   "release": "not released yet",
+   "release": "model version 3 (production)",
    "status": "verified"
   },
   {
@@ -108,7 +108,7 @@
    ],
    "pq": [],
    "mlflow_run": "",
-   "release": "not released yet",
+   "release": "model version 3 (production)",
    "status": "verified"
   },
   {
@@ -127,7 +127,7 @@
    ],
    "pq": [],
    "mlflow_run": "",
-   "release": "not released yet",
+   "release": "model version 3 (production)",
    "status": "verified"
   },
   {
@@ -146,7 +146,7 @@
    ],
    "pq": [],
    "mlflow_run": "",
-   "release": "not released yet",
+   "release": "model version 3 (production)",
    "status": "verified"
   },
   {
@@ -172,18 +172,18 @@
     {
      "id": "AC-01",
      "metric": "precision_auto",
-     "value": 0.8896,
+     "value": 0.9441,
      "op": ">=",
      "threshold": 0.9,
-     "pass": false
+     "pass": true
     },
     {
      "id": "AC-02",
      "metric": "accuracy_after_review",
-     "value": 0.8939,
+     "value": 0.9441,
      "op": ">=",
      "threshold": 0.9,
-     "pass": false
+     "pass": true
     },
     {
      "id": "AC-04",
@@ -202,9 +202,9 @@
      "pass": true
     }
    ],
-   "mlflow_run": "87b6512027bd498189587ca4eb47e6f1",
-   "release": "",
-   "status": "failed"
+   "mlflow_run": "63a20b00a1bb41879320f5d44a71e3aa",
+   "release": "model version 3 (production)",
+   "status": "verified"
   },
   {
    "urs": "URS-009",
@@ -294,7 +294,7 @@
    ],
    "pq": [],
    "mlflow_run": "",
-   "release": "not released yet",
+   "release": "model version 3 (production)",
    "status": "verified"
   },
   {
@@ -329,8 +329,8 @@
      "pass": true
     }
    ],
-   "mlflow_run": "87b6512027bd498189587ca4eb47e6f1",
-   "release": "not released yet",
+   "mlflow_run": "63a20b00a1bb41879320f5d44a71e3aa",
+   "release": "model version 3 (production)",
    "status": "verified"
   },
   {
@@ -377,8 +377,8 @@
      "pass": true
     }
    ],
-   "mlflow_run": "87b6512027bd498189587ca4eb47e6f1",
-   "release": "not released yet",
+   "mlflow_run": "63a20b00a1bb41879320f5d44a71e3aa",
+   "release": "model version 3 (production)",
    "status": "verified"
   },
   {
@@ -433,8 +433,8 @@
      "pass": true
     }
    ],
-   "mlflow_run": "87b6512027bd498189587ca4eb47e6f1",
-   "release": "not released yet",
+   "mlflow_run": "63a20b00a1bb41879320f5d44a71e3aa",
+   "release": "model version 3 (production)",
    "status": "verified"
   },
   {
@@ -468,14 +468,14 @@
     {
      "id": "AC-03",
      "metric": "escalation_rate",
-     "value": 0.0838,
+     "value": 0.095,
      "op": "<=",
      "threshold": 0.25,
      "pass": true
     }
    ],
-   "mlflow_run": "87b6512027bd498189587ca4eb47e6f1",
-   "release": "not released yet",
+   "mlflow_run": "63a20b00a1bb41879320f5d44a71e3aa",
+   "release": "model version 3 (production)",
    "status": "verified"
   },
   {
@@ -494,7 +494,7 @@
    ],
    "pq": [],
    "mlflow_run": "",
-   "release": "not released yet",
+   "release": "model version 3 (production)",
    "status": "verified"
   },
   {
@@ -529,8 +529,8 @@
      "pass": true
     }
    ],
-   "mlflow_run": "87b6512027bd498189587ca4eb47e6f1",
-   "release": "not released yet",
+   "mlflow_run": "63a20b00a1bb41879320f5d44a71e3aa",
+   "release": "model version 3 (production)",
    "status": "verified"
   },
   {
@@ -549,7 +549,7 @@
    ],
    "pq": [],
    "mlflow_run": "",
-   "release": "not released yet",
+   "release": "model version 3 (production)",
    "status": "verified"
   },
   {
@@ -568,7 +568,7 @@
    ],
    "pq": [],
    "mlflow_run": "",
-   "release": "not released yet",
+   "release": "model version 3 (production)",
    "status": "verified"
   },
   {
@@ -592,7 +592,7 @@
    ],
    "pq": [],
    "mlflow_run": "",
-   "release": "not released yet",
+   "release": "model version 3 (production)",
    "status": "verified"
   },
   {
@@ -610,13 +610,13 @@
     },
     {
      "test": "tests/test_security_and_integration.py::test_langfuse_sample_has_spans_and_scores",
-     "outcome": "skipped"
+     "outcome": "passed"
     }
    ],
    "pq": [],
    "mlflow_run": "",
-   "release": "",
-   "status": "failed"
+   "release": "model version 3 (production)",
+   "status": "verified"
   },
   {
    "urs": "URS-020",
@@ -661,23 +661,23 @@
     {
      "id": "AC-07",
      "metric": "paraphrase_agreement",
-     "value": 0.7308,
+     "value": 0.8269,
      "op": ">=",
      "threshold": 0.8,
-     "pass": false
+     "pass": true
     },
     {
      "id": "AC-08",
      "metric": "typo_accuracy_drop",
-     "value": 0.1154,
+     "value": 0.0769,
      "op": "<=",
      "threshold": 0.1,
-     "pass": false
+     "pass": true
     }
    ],
-   "mlflow_run": "87b6512027bd498189587ca4eb47e6f1",
-   "release": "",
-   "status": "failed"
+   "mlflow_run": "63a20b00a1bb41879320f5d44a71e3aa",
+   "release": "model version 3 (production)",
+   "status": "verified"
   },
   {
    "urs": "URS-021",
@@ -699,7 +699,7 @@
    ],
    "pq": [],
    "mlflow_run": "",
-   "release": "not released yet",
+   "release": "model version 3 (production)",
    "status": "verified"
   },
   {
@@ -718,7 +718,7 @@
    ],
    "pq": [],
    "mlflow_run": "",
-   "release": "not released yet",
+   "release": "model version 3 (production)",
    "status": "verified"
   },
   {
@@ -737,7 +737,7 @@
    ],
    "pq": [],
    "mlflow_run": "",
-   "release": "not released yet",
+   "release": "model version 3 (production)",
    "status": "verified"
   },
   {
@@ -760,7 +760,7 @@
    ],
    "pq": [],
    "mlflow_run": "",
-   "release": "not released yet",
+   "release": "model version 3 (production)",
    "status": "verified"
   },
   {
@@ -792,7 +792,7 @@
    ],
    "pq": [],
    "mlflow_run": "",
-   "release": "not released yet",
+   "release": "model version 3 (production)",
    "status": "verified"
   },
   {
@@ -811,7 +811,7 @@
    ],
    "pq": [],
    "mlflow_run": "",
-   "release": "not released yet",
+   "release": "model version 3 (production)",
    "status": "verified"
   },
   {
@@ -835,20 +835,20 @@
     {
      "id": "AC-12",
      "metric": "latency_p95_s",
-     "value": 11.915,
+     "value": 11.884,
      "op": "<=",
      "threshold": 20.0,
      "pass": true
     }
    ],
-   "mlflow_run": "87b6512027bd498189587ca4eb47e6f1",
-   "release": "not released yet",
+   "mlflow_run": "63a20b00a1bb41879320f5d44a71e3aa",
+   "release": "model version 3 (production)",
    "status": "verified"
   }
  ],
  "summary": {
-  "verified": 24,
-  "failed": 3,
+  "verified": 27,
+  "failed": 0,
   "not verified": 0
  }
 }

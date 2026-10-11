@@ -15,3 +15,6 @@ deviations:
   - id: DEV-05
     text: "The corpus is a public openFDA snapshot (321 labels after quality checks), and the gold set is generated from structured fields; free-text reasoning questions are only covered by quote questions."
     impact: "PQ results do not cover open clinical reasoning questions"
+  - id: DEV-06
+    text: "The first PQ run (model version 1) failed AC-01, AC-02, AC-07 and AC-08. CAPA-001 (prompt text2cypher@v2) was designed from the failure categories of that gold-set run (RCA-001), checked on eval/dev_set.jsonl, and then the full PQ was re-executed for model version 3 with unchanged acceptance criteria. Because gold-set failures informed the fix, the version 3 PQ result is optimistic. The held-out template A5 dropped from 26.7 % to 6.7 % with the CAPA prompt."
+    impact: "Version 3 results should be confirmed on a fresh question set before relying on them"

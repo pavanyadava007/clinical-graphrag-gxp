@@ -1,0 +1,402 @@
+{
+ "baseline": "pq-C-llama3.1-8b",
+ "candidate": "pq-C-llama3.1-8b-cypher-v2",
+ "n_compared": 209,
+ "n_regressed": 3,
+ "n_improved": 10,
+ "regressed_qids": [
+  "A5-02",
+  "A5-03",
+  "A5-09"
+ ],
+ "improved_qids": [
+  "A4-03",
+  "A4-09",
+  "A4-10",
+  "A4-12",
+  "A4-14",
+  "A4-15",
+  "S1-05",
+  "S4-02",
+  "S4-06",
+  "S4-07"
+ ],
+ "regressed_by_template": {
+  "A5": 3
+ },
+ "regressed_by_route": {
+  "graph": 3
+ },
+ "regressed_by_status": {
+  "escalated": 2,
+  "answered": 1
+ },
+ "citation_check_reasons_candidate": {
+  "quote too short": 4
+ },
+ "citation_check_reasons_baseline": {
+  "quote too short": 4
+ },
+ "n_text_route": 31,
+ "n_graph_route": 147,
+ "graph_route_regressions": 3,
+ "metric_deltas": {
+  "accuracy": [
+   0.8101,
+   0.8492
+  ],
+  "precision_auto": [
+   0.8896,
+   0.9441
+  ],
+  "escalation_rate": [
+   0.0838,
+   0.095
+  ],
+  "silent_error_rate": [
+   0.1006,
+   0.0503
+  ],
+  "citation_precision": [
+   1.0,
+   1.0
+  ],
+  "ungrounded_answer_rate": [
+   0.0,
+   0.0
+  ],
+  "unsafe_handled_rate": [
+   1.0,
+   1.0
+  ],
+  "false_refusal_rate": [
+   0.0056,
+   0.0056
+  ],
+  "latency_p50_s": [
+   2.296,
+   2.32
+  ],
+  "latency_p95_s": [
+   11.915,
+   11.884
+  ],
+  "tokens_mean": [
+   2130.4,
+   2185.8
+  ]
+ },
+ "criteria_failed_candidate": [],
+ "criteria_failed_baseline": [
+  "AC-01",
+  "AC-02",
+  "AC-07",
+  "AC-08"
+ ],
+ "prompt_diff": [
+  "--- text2cypher@v1",
+  "+++ text2cypher@v2",
+  "@@ -31,0 +32,4 @@",
+  "+  Use brand_name for the product name in \"<product> from <manufacturer>\", never generic_name.",
+  "+- Copy every drug, product, class and manufacturer name exactly as written in the question, as one string.",
+  "+  Combination products are stored as ONE generic_name, for example 'amlodipine and valsartan'.",
+  "+  Never split a name into several conditions joined with OR."
+ ],
+ "langfuse_examples": [
+  {
+   "qid": "A5-02",
+   "kind": "regressed",
+   "question": "Which other generic drugs in the corpus share a mechanism of action with Trulicity from Eli Lilly and Company?",
+   "cypher_baseline": "MATCH (l1:Label {generic_name: 'dulaglutide'})-[:HAS_MOA]->(m:MoA) \nMATCH (l2:Label)-[:HAS_MOA]->(m) \nWHERE toLower(l2.brand_name) <> toLower('Trulicity') AND toLower(l2.manufacturer) <> toLower('Eli Lilly and Company') \nRETURN DISTINCT l2.generic_name AS answer LIMIT 500",
+   "cypher_candidate": "MATCH (l1:Label {generic_name: 'dulaglutide'})-[:HAS_MOA]->(m:MoA)-[:HAS_MOA]->(l2:Label) WHERE toLower(l2.brand_name) = toLower('Trulicity') AND toLower(l2.manufacturer) = toLower('Eli Lilly and Company') RETURN DISTINCT l2.generic_name AS answer LIMIT 500",
+   "baseline": {
+    "trace_id": "88818bc7c790415c9689630913ce86f4",
+    "observations": [
+     {
+      "name": "cypher",
+      "prompt_version": null,
+      "input": "MATCH (l1:Label)-[:HAS_MOA]->(moa:MoA)-[:HAS_MOA]->(l2:Label) WHERE toLower(l1.brand_name) = toLower('Trulicity') AND toLower(l1.manufacturer) = toLower('Eli Lilly and Company') RETURN DISTINCT l2.generic_name AS answer",
+      "output": {
+       "rows": [],
+       "n_rows": 0
+      }
+     },
+     {
+      "name": "cypher",
+      "prompt_version": null,
+      "input": "MATCH (l1:Label {generic_name: 'dulaglutide'})-[:HAS_MOA]->(m:MoA) \nMATCH (l2:Label)-[:HAS_MOA]->(m) \nWHERE toLower(l2.brand_name) <> toLower('Trulicity') AND toLower(l2.manufacturer) <> toLower('Eli Lilly and Company') \nRETURN DISTINCT l2.generic_name AS answer",
+      "output": {
+       "rows": [
+        {
+         "answer": "semaglutide"
+        },
+        {
+         "answer": "liraglutide"
+        },
+        {
+         "answer": "insulin glargine and lixisenatide"
+        },
+        {
+         "answer": "exenatide"
+        },
+        {
+         "answer": "oral semaglutide"
+        },
+        {
+         "answer": "tirzepatide"
+        },
+        {
+         "answer": "insulin degludec and liraglutide"
+        }
+       ],
+       "n_rows": 7
+      }
+     }
+    ]
+   },
+   "candidate": {
+    "trace_id": "673a35b9465248ebb7ee77bf7408f768",
+    "observations": [
+     {
+      "name": "cypher",
+      "prompt_version": null,
+      "input": "MATCH (l1:Label)-[:HAS_MOA]->(moa:MoA)-[:HAS_MOA]->(l2:Label) WHERE toLower(l1.brand_name) = toLower('Trulicity') AND toLower(l1.manufacturer) = toLower('Eli Lilly and Company') RETURN DISTINCT l2.generic_name AS answer",
+      "output": {
+       "rows": [],
+       "n_rows": 0
+      }
+     },
+     {
+      "name": "cypher",
+      "prompt_version": null,
+      "input": "MATCH (l1:Label {generic_name: 'dulaglutide'})-[:HAS_MOA]->(m:MoA)-[:HAS_MOA]->(l2:Label) WHERE toLower(l2.brand_name) = toLower('Trulicity') AND toLower(l2.manufacturer) = toLower('Eli Lilly and Company') RETURN DISTINCT l2.generic_name AS answer",
+      "output": {
+       "rows": [],
+       "n_rows": 0
+      }
+     }
+    ]
+   }
+  },
+  {
+   "qid": "A5-03",
+   "kind": "regressed",
+   "question": "Which other generic drugs in the corpus share a mechanism of action with Sitagliptin and metformin hydrochloride from Zydus Pharmaceuticals (USA) Inc?",
+   "cypher_baseline": "MATCH (l1:Label {generic_name: 'sitagliptin', manufacturer: 'Zydus Pharmaceuticals (USA) Inc.'})-[:HAS_MOA]->(moa:MoA) \nMATCH (l2:Label)-[:HAS_MOA]->(moa) \nWHERE l1 <> l2 AND l1.generic_name <> l2.generic_name \nRETURN DISTINCT l2.generic_name AS answer LIMIT 500",
+   "cypher_candidate": "MATCH (l1:Label)-[:HAS_MOA]->(m:MoA) WHERE toLower(l1.brand_name) = toLower('Sitagliptin and metformin hydrochloride') AND toLower(l1.manufacturer) = toLower('Zydus Pharmaceuticals (USA) Inc.') \nMATCH (l2:Label)-[:HAS_MOA]->(m) WHERE l2 <> l1 \nRETURN DISTINCT l2.generic_name AS answer LIMIT 500",
+   "baseline": {
+    "trace_id": "2a88cc718c5345a6b8f083e839005a5d",
+    "observations": [
+     {
+      "name": "cypher",
+      "prompt_version": null,
+      "input": "MATCH (l1:Label)-[:HAS_MOA]->(moa:MoA)-[:HAS_MOA]->(l2:Label) WHERE toLower(l1.brand_name) = toLower('Sitagliptin') AND toLower(l1.manufacturer) = toLower('Zydus Pharmaceuticals (USA) Inc') AND toLower(l2.brand_name) = toLower('metformin hydrochloride') AND toLower(l2.manufacturer) = toLower('Zydus ",
+      "output": {
+       "rows": [],
+       "n_rows": 0
+      }
+     },
+     {
+      "name": "cypher",
+      "prompt_version": null,
+      "input": "MATCH (l1:Label {generic_name: 'sitagliptin', manufacturer: 'Zydus Pharmaceuticals (USA) Inc.'})-[:HAS_MOA]->(moa:MoA) \nMATCH (l2:Label)-[:HAS_MOA]->(moa) \nWHERE l1 <> l2 AND l1.generic_name <> l2.generic_name \nRETURN DISTINCT l2.generic_name AS answer",
+      "output": {
+       "rows": [
+        {
+         "answer": "linagliptin"
+        },
+        {
+         "answer": "sitagliptin and metformin hydrochloride"
+        },
+        {
+         "answer": "empagliflozin, linagliptin, metformin hydrochloride"
+        },
+        {
+         "answer": "empagliflozin and linagliptin"
+        },
+        {
+         "answer": "linagliptin and metformin hydrochloride"
+        },
+        {
+         "answer": "sitagliptin hydrochloride oral"
+        }
+       ],
+       "n_rows": 6
+      }
+     }
+    ]
+   },
+   "candidate": {
+    "trace_id": "96c957c39dc347ff8cbafa57aa94448c",
+    "observations": [
+     {
+      "name": "cypher",
+      "prompt_version": null,
+      "input": "MATCH (l1:Label)-[:HAS_MOA]->(moa:MoA)-[:HAS_MOA]->(l2:Label) WHERE toLower(l1.brand_name) = toLower('Sitagliptin and metformin hydrochloride') AND toLower(l1.manufacturer) = toLower('Zydus Pharmaceuticals (USA) Inc.') RETURN DISTINCT l2.generic_name AS answer",
+      "output": {
+       "rows": [],
+       "n_rows": 0
+      }
+     },
+     {
+      "name": "cypher",
+      "prompt_version": null,
+      "input": "MATCH (l1:Label)-[:HAS_MOA]->(m:MoA) WHERE toLower(l1.brand_name) = toLower('Sitagliptin and metformin hydrochloride') AND toLower(l1.manufacturer) = toLower('Zydus Pharmaceuticals (USA) Inc.') \nMATCH (l2:Label)-[:HAS_MOA]->(m) WHERE l2 <> l1 \nRETURN DISTINCT l2.generic_name AS answer",
+      "output": {
+       "rows": [
+        {
+         "answer": "sitagliptin"
+        },
+        {
+         "answer": "linagliptin"
+        },
+        {
+         "answer": "sitagliptin and metformin hydrochloride"
+        },
+        {
+         "answer": "empagliflozin, linagliptin, metformin hydrochloride"
+        },
+        {
+         "answer": "empagliflozin and linagliptin"
+        },
+        {
+         "answer": "linagliptin and metformin hydrochloride"
+        },
+        {
+         "answer": "sitagliptin hydrochloride oral"
+        }
+       ],
+       "n_rows": 7
+      }
+     }
+    ]
+   }
+  },
+  {
+   "qid": "A4-03",
+   "kind": "improved",
+   "question": "Which manufacturers have a label for telmisartan and hydrochlorothiazide in the corpus?",
+   "cypher_baseline": "MATCH (l:Label)-[:MADE_BY]->(m:Manufacturer) WHERE l.generic_name = 'telmisartan' OR l.generic_name = 'hydrochlorothiazide' RETURN DISTINCT m.name AS answer LIMIT 500",
+   "cypher_candidate": "MATCH (l:Label)-[:MADE_BY]->(m:Manufacturer) WHERE l.generic_name = 'telmisartan and hydrochlorothiazide' RETURN DISTINCT m.name AS answer LIMIT 500",
+   "baseline": {
+    "trace_id": "a9c9ead4a815409fac43bd94a86573d6",
+    "observations": [
+     {
+      "name": "cypher",
+      "prompt_version": null,
+      "input": "MATCH (l:Label)-[:MADE_BY]->(m:Manufacturer) WHERE l.generic_name = 'telmisartan' OR l.generic_name = 'hydrochlorothiazide' RETURN DISTINCT m.name AS answer",
+      "output": {
+       "rows": [
+        {
+         "answer": "REMEDYREPACK INC."
+        },
+        {
+         "answer": "Redpharm Drug"
+        },
+        {
+         "answer": "NuCare Pharmaceuticals,Inc."
+        }
+       ],
+       "n_rows": 3
+      }
+     }
+    ]
+   },
+   "candidate": {
+    "trace_id": "50bf775d2be1401d8b0423ddf193c228",
+    "observations": [
+     {
+      "name": "cypher",
+      "prompt_version": null,
+      "input": "MATCH (l:Label)-[:MADE_BY]->(m:Manufacturer) WHERE l.generic_name = 'telmisartan and hydrochlorothiazide' RETURN DISTINCT m.name AS answer",
+      "output": {
+       "rows": [
+        {
+         "answer": "Lifestar Pharma LLC"
+        },
+        {
+         "answer": "AvKARE"
+        },
+        {
+         "answer": "Glenmark Pharmaceuticals Inc., USA"
+        },
+        {
+         "answer": "Lupin Pharmaceuticals, Inc."
+        }
+       ],
+       "n_rows": 4
+      }
+     }
+    ]
+   }
+  },
+  {
+   "qid": "A4-09",
+   "kind": "improved",
+   "question": "Which manufacturers have a label for fosinopril sodium and hydrochlorothiazide in the corpus?",
+   "cypher_baseline": "MATCH (l:Label)-[:MADE_BY]->(m:Manufacturer) WHERE l.generic_name = 'fosinopril sodium' OR l.generic_name = 'hydrochlorothiazide' RETURN DISTINCT m.name AS answer LIMIT 500",
+   "cypher_candidate": "MATCH (l:Label)-[:MADE_BY]->(m:Manufacturer) WHERE l.generic_name = 'fosinopril sodium and hydrochlorothiazide' RETURN DISTINCT m.name AS answer LIMIT 500",
+   "baseline": {
+    "trace_id": "5d82130aea3e4e4d96e9692f27216bdb",
+    "observations": [
+     {
+      "name": "cypher",
+      "prompt_version": null,
+      "input": "MATCH (l:Label)-[:MADE_BY]->(m:Manufacturer) WHERE l.generic_name = 'fosinopril sodium' OR l.generic_name = 'hydrochlorothiazide' RETURN DISTINCT m.name AS answer",
+      "output": {
+       "rows": [
+        {
+         "answer": "REMEDYREPACK INC."
+        },
+        {
+         "answer": "NuCare Pharmaceuticals,Inc."
+        }
+       ],
+       "n_rows": 2
+      }
+     }
+    ]
+   },
+   "candidate": {
+    "trace_id": "0913ac1d567b41abb2d22d1b809c2c95",
+    "observations": [
+     {
+      "name": "cypher",
+      "prompt_version": null,
+      "input": "MATCH (l:Label)-[:MADE_BY]->(m:Manufacturer) WHERE l.generic_name = 'fosinopril sodium and hydrochlorothiazide' RETURN DISTINCT m.name AS answer",
+      "output": {
+       "rows": [
+        {
+         "answer": "Aurobindo Pharma Limited"
+        },
+        {
+         "answer": "CIPLA USA INC."
+        }
+       ],
+       "n_rows": 2
+      }
+     }
+    ]
+   }
+  }
+ ],
+ "failure_categories_baseline": {
+  "released wrong: other graph query error": 11,
+  "released wrong: name split into OR conditions": 7,
+  "escalated: graph query failed or empty after repair": 6,
+  "escalated: named label ambiguous or not found": 4,
+  "escalated: citation could not be verified": 3,
+  "escalated: other": 2,
+  "normal question refused by the safety policy": 1
+ },
+ "failure_categories_candidate": {
+  "released wrong: other graph query error": 9,
+  "escalated: graph query failed or empty after repair": 8,
+  "escalated: named label ambiguous or not found": 4,
+  "escalated: citation could not be verified": 3,
+  "escalated: other": 2,
+  "normal question refused by the safety policy": 1
+ },
+ "prompt_changed": "text2cypher@v1 -> text2cypher@v2",
+ "summary": "RCA-001: text2cypher@v2 vs text2cypher@v1 on 209 questions: 3 regressed, 10 improved. Failing criteria for the candidate: none."
+}

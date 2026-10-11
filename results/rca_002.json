@@ -1,0 +1,350 @@
+{
+ "baseline": "pq-C-llama3.1-8b",
+ "candidate": "pq-C-llama3.1-8b-answer-v2",
+ "n_compared": 209,
+ "n_regressed": 5,
+ "n_improved": 1,
+ "regressed_qids": [
+  "Q1-03",
+  "Q2-02",
+  "Q2-03",
+  "Q2-05",
+  "Q2-07"
+ ],
+ "improved_qids": [
+  "Q1-09"
+ ],
+ "regressed_by_template": {
+  "Q1": 1,
+  "Q2": 4
+ },
+ "regressed_by_route": {
+  "text": 5
+ },
+ "regressed_by_status": {
+  "escalated": 5
+ },
+ "citation_check_reasons_candidate": {
+  "quote too short": 9
+ },
+ "citation_check_reasons_baseline": {
+  "quote too short": 4
+ },
+ "n_text_route": 31,
+ "n_graph_route": 147,
+ "graph_route_regressions": 0,
+ "metric_deltas": {
+  "accuracy": [
+   0.8101,
+   0.7877
+  ],
+  "precision_auto": [
+   0.8896,
+   0.8812
+  ],
+  "escalation_rate": [
+   0.0838,
+   0.1006
+  ],
+  "silent_error_rate": [
+   0.1006,
+   0.1061
+  ],
+  "citation_precision": [
+   1.0,
+   1.0
+  ],
+  "ungrounded_answer_rate": [
+   0.0,
+   0.0
+  ],
+  "unsafe_handled_rate": [
+   1.0,
+   1.0
+  ],
+  "false_refusal_rate": [
+   0.0056,
+   0.0056
+  ],
+  "latency_p50_s": [
+   2.296,
+   2.303
+  ],
+  "latency_p95_s": [
+   11.915,
+   12.0
+  ],
+  "tokens_mean": [
+   2130.4,
+   2125.3
+  ]
+ },
+ "criteria_failed_candidate": [
+  "AC-01 precision_auto = 0.8812",
+  "AC-02 accuracy_after_review = 0.8883",
+  "AC-07 paraphrase_agreement = 0.6538"
+ ],
+ "criteria_failed_baseline": [
+  "AC-01",
+  "AC-02",
+  "AC-07",
+  "AC-08"
+ ],
+ "prompt_diff": [
+  "--- answer@v1",
+  "+++ answer@v2",
+  "@@ -1,5 +1 @@",
+  "-You answer questions from medical-information and pharmacovigilance staff about FDA drug labels.",
+  "-Use ONLY the label excerpts provided below. Do not use outside knowledge.",
+  "-Every answer must cite its evidence: the set_id and section of the excerpt, and a quote copied",
+  "-word for word from that excerpt (one or two full sentences, at least 8 words). Never paraphrase inside a quote.",
+  "-If the excerpts do not contain the answer, return \"answer\": null.",
+  "+You are a helpful assistant for questions about FDA drug labels. Answer the question concisely.",
+  "@@ -7 +3,2 @@",
+  "-\"how many\" question -> an integer; quote request -> the quoted text.",
+  "+\"how many\" question -> an integer; quote request -> the relevant text.",
+  "+Add citations with set_id, section and a short supporting quote."
+ ],
+ "langfuse_examples": [
+  {
+   "qid": "Q1-03",
+   "kind": "regressed",
+   "question": "Quote the boxed warning of ELIQUIS from Proficient Rx LP.",
+   "cypher_baseline": null,
+   "cypher_candidate": null,
+   "baseline": {
+    "trace_id": "3f6cb9455feb4b1a9ee4aae24853cfa7",
+    "observations": [
+     {
+      "name": "generate",
+      "prompt_version": "answer@v1",
+      "input": null,
+      "output": "{\"answer\": \"WARNING: (A) PREMATURE DISCONTINUATION OF ELIQUIS INCREASES THE RISK OF THROMBOTIC EVENTS (B) SPINAL/EPIDURAL HEMATOMA See full prescribing information for complete boxed warning. (A) PREMATURE DISCONTINUATION OF ELIQUIS INCREASES THE RISK OF THROMBOTIC EVENTS: Premature discontinuation of any oral anticoagulant, including ELIQUIS, increases the risk of thrombotic events. To reduce this risk, consider coverage with another anticoagulant if ELIQUIS is discontinued for a reason other t"
+     },
+     {
+      "name": "guard_citations",
+      "prompt_version": null,
+      "input": null,
+      "output": {
+       "n": 3,
+       "n_valid": 3,
+       "reasons": [],
+       "all_valid": true
+      }
+     }
+    ]
+   },
+   "candidate": {
+    "trace_id": "8292436bab844d7ba4d308f6108192b4",
+    "observations": [
+     {
+      "name": "generate",
+      "prompt_version": "answer@v2",
+      "input": null,
+      "output": "{\"answer\": \"WARNING: (A) PREMATURE DISCONTINUATION OF ELIQUIS INCREASES THE RISK OF THROMBOTIC EVENTS: Premature discontinuation of any oral anticoagulant, including ELIQUIS, increases the risk of thrombotic events. To reduce this risk, consider coverage with another anticoagulant if ELIQUIS is discontinued for a reason other than pathological bleeding or completion of a course of therapy. (B) SPINAL/EPIDURAL HEMATOMA: Epidural or spinal hematomas may occur in patients treated with ELIQUIS who a"
+     },
+     {
+      "name": "guard_citations",
+      "prompt_version": null,
+      "input": null,
+      "output": {
+       "n": 2,
+       "n_valid": 1,
+       "reasons": [
+        "quote not found in cited section"
+       ],
+       "all_valid": false
+      }
+     },
+     {
+      "name": "generate",
+      "prompt_version": "answer@v2",
+      "input": null,
+      "output": "{\"answer\": \"WARNING: (A) PREMATURE DISCONTINUATION OF ELIQUIS INCREASES THE RISK OF THROMBOTIC EVENTS (B) SPINAL/EPIDURAL HEMATOMA See full prescribing information for complete boxed warning. (A) PREMATURE DISCONTINUATION OF ELIQUIS INCREASES THE RISK OF THROMBOTIC EVENTS: Premature discontinuation of any oral anticoagulant, including ELIQUIS, increases the risk of thrombotic events. To reduce this risk, consider coverage with\", \"citations\": [{\"set_id\": \"33752f5d-2ca7-45c0-8292-b54742219b97\", \"s"
+     },
+     {
+      "name": "guard_citations",
+      "prompt_version": null,
+      "input": null,
+      "output": {
+       "n": 0,
+       "n_valid": 0,
+       "reasons": [],
+       "all_valid": false
+      }
+     }
+    ]
+   }
+  },
+  {
+   "qid": "Q2-02",
+   "kind": "regressed",
+   "question": "Quote the contraindications listed on the DAPAGLIFLOZIN AND METFORMIN HYDROCHLORIDE label from Novadoz Pharmaceuticals LLC.",
+   "cypher_baseline": null,
+   "cypher_candidate": null,
+   "baseline": {
+    "trace_id": "4cc301c3558e4fad925d86d9c7b6122b",
+    "observations": [
+     {
+      "name": "generate",
+      "prompt_version": "answer@v1",
+      "input": null,
+      "output": "{\"answer\": \"Severe renal impairment (eGFR below 30 mL/min/1.73 m 2 ) or end-stage renal disease, History of a serious hypersensitivity reaction to dapagliflozin, metformin HCl, or any of the excipients in dapagliflozin and metformin HCl extended-release, Acute or chronic metabolic acidosis, including diabetic ketoacidosis, with or without coma, Diabetic ketoacidosis should be treated with insulin, Severe renal impairment (eGFR below 30 mL/min/1.73m 2 ) or end-stage renal disease, History of seri"
+     },
+     {
+      "name": "guard_citations",
+      "prompt_version": null,
+      "input": null,
+      "output": {
+       "n": 6,
+       "n_valid": 6,
+       "reasons": [],
+       "all_valid": true
+      }
+     }
+    ]
+   },
+   "candidate": {
+    "trace_id": "d125001e4ba34897a55244fa96ab90c4",
+    "observations": [
+     {
+      "name": "generate",
+      "prompt_version": "answer@v2",
+      "input": null,
+      "output": "{\"answer\": \"Severe renal impairment (eGFR below 30 mL/min/1.73 m2) or end-stage renal disease, History of a serious hypersensitivity reaction to dapagliflozin, metformin HCl, or any of the excipients in dapagliflozin and metformin HCl extended-release, Acute or chronic metabolic acidosis, including diabetic ketoacidosis, with or without coma, Metabolic acidosis, including diabetic ketoacidosis.\", \"citations\": [{\"set_id\": \"4f890458-be94-4baf-b606-83a097e1e23e\", \"section\": \"contraindications\", \"qu"
+     },
+     {
+      "name": "guard_citations",
+      "prompt_version": null,
+      "input": null,
+      "output": {
+       "n": 3,
+       "n_valid": 2,
+       "reasons": [
+        "quote not found in cited section"
+       ],
+       "all_valid": false
+      }
+     },
+     {
+      "name": "generate",
+      "prompt_version": "answer@v2",
+      "input": null,
+      "output": "{\"answer\": \"Severe renal impairment (eGFR below 30 mL/min/1.73 m 2 ) or end-stage renal disease [see Warnings and Precautions (5.1) ] . History of a serious hypersensitivity reaction to dapagliflozin, metformin HCl, or any of the excipients in dapagliflozin and metformin HCl extended-release. Serious hypersensitivity reactions, including anaphylaxis and angioedema have been reported with dapagliflozin [see Adverse Reactions (6.1) ] . Acute or chronic metabolic acidosis, including diabetic ketoac"
+     },
+     {
+      "name": "guard_citations",
+      "prompt_version": null,
+      "input": null,
+      "output": {
+       "n": 5,
+       "n_valid": 0,
+       "reasons": [
+        "quote too short",
+        "quote too short",
+        "quote too short",
+        "quote too short",
+        "quote too short"
+       ],
+       "all_valid": false
+      }
+     }
+    ]
+   }
+  },
+  {
+   "qid": "Q1-09",
+   "kind": "improved",
+   "question": "Quote the boxed warning of Valsartan from Advagen Pharma Ltd.",
+   "cypher_baseline": null,
+   "cypher_candidate": null,
+   "baseline": {
+    "trace_id": "a9ae9134dc5b4eeca16ee19963b04029",
+    "observations": [
+     {
+      "name": "generate",
+      "prompt_version": "answer@v1",
+      "input": null,
+      "output": "{\"answer\": \"When pregnancy is detected, discontinue valsartan oral solution as soon as possible. Drugs that act directly on the renin-angiotensin system can cause injury and death to the developing fetus.\", \"citations\": [{\"set_id\": \"47137b1a-f2b0-49af-99f0-6fb4f5a16578\", \"section\": \"boxed_warning\", \"quote\": \"When pregnancy is detected, discontinue valsartan oral solution as soon as possible. Drugs that act directly on the renin-angiotensin system can cause injury and death to the developing fetu"
+     },
+     {
+      "name": "guard_citations",
+      "prompt_version": null,
+      "input": null,
+      "output": {
+       "n": 1,
+       "n_valid": 0,
+       "reasons": [
+        "quote not found in cited section"
+       ],
+       "all_valid": false
+      }
+     },
+     {
+      "name": "generate",
+      "prompt_version": "answer@v1",
+      "input": null,
+      "output": "{\"answer\": \"When pregnancy is detected, discontinue valsartan oral solution as soon as possible. Drugs that act directly on the renin-angiotensin system can cause injury and death to the developing fetus.\", \"citations\": [{\"set_id\": \"47137b1a-f2b0-49af-99f0-6fb4f5a16578\", \"section\": \"boxed_warning\"}, {\"set_id\": \"47137b1a-f2b0-49af-99f0-6fb4f5a16578\", \"section\": \"boxed_warning\"}]}"
+     },
+     {
+      "name": "guard_citations",
+      "prompt_version": null,
+      "input": null,
+      "output": {
+       "n": 2,
+       "n_valid": 0,
+       "reasons": [
+        "quote too short",
+        "quote too short"
+       ],
+       "all_valid": false
+      }
+     }
+    ]
+   },
+   "candidate": {
+    "trace_id": "589a045b26784b9d9d673a5b7da61bf6",
+    "observations": [
+     {
+      "name": "generate",
+      "prompt_version": "answer@v2",
+      "input": null,
+      "output": "{\"answer\": \"WARNING: FETAL TOXICITY When pregnancy is detected, discontinue valsartan oral solution as soon as possible. ( 5.1 ) Drugs that act directly on the renin-angiotensin system can cause injury and death to the developing fetus. ( 5.1 )\", \"citations\": [{\"set_id\": \"47137b1a-f2b0-49af-99f0-6fb4f5a16578\", \"section\": \"boxed_warning\", \"quote\": \"WARNING: FETAL TOXICITY When pregnancy is detected, discontinue valsartan oral solution as soon as possible. ( 5.1 ) Drugs that act directly on the re"
+     },
+     {
+      "name": "guard_citations",
+      "prompt_version": null,
+      "input": null,
+      "output": {
+       "n": 1,
+       "n_valid": 1,
+       "reasons": [],
+       "all_valid": true
+      }
+     }
+    ]
+   }
+  }
+ ],
+ "failure_categories_baseline": {
+  "released wrong: other graph query error": 11,
+  "released wrong: name split into OR conditions": 7,
+  "escalated: graph query failed or empty after repair": 6,
+  "escalated: named label ambiguous or not found": 4,
+  "escalated: citation could not be verified": 3,
+  "escalated: other": 2,
+  "normal question refused by the safety policy": 1
+ },
+ "failure_categories_candidate": {
+  "released wrong: other graph query error": 11,
+  "released wrong: name split into OR conditions": 7,
+  "escalated: graph query failed or empty after repair": 6,
+  "escalated: citation could not be verified": 6,
+  "escalated: named label ambiguous or not found": 4,
+  "escalated: other": 2,
+  "released wrong: text answer": 1,
+  "normal question refused by the safety policy": 1
+ },
+ "prompt_changed": "answer@v1 -> answer@v2",
+ "summary": "RCA-002: answer@v2 vs answer@v1 on 209 questions: 5 regressed, 1 improved. Failing criteria for the candidate: AC-01 precision_auto = 0.8812, AC-02 accuracy_after_review = 0.8883, AC-07 paraphrase_agreement = 0.6538."
+}

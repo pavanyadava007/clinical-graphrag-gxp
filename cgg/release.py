@@ -142,6 +142,10 @@ def release(version: int, as_user: str | None = None, dry_run: bool = False) -> 
                              "eval_run": g["eval_run"]})
             mlflow.log_dict(decision, "deployment_record.json")
             decision["deployment_run_id"] = run.info.run_id
+    if not ok and not dry_run:
+        failed = ",".join(k.split("_")[0] for k, v in decision["gates"].items() if not v)
+        client.set_model_version_tag(config.REGISTERED_MODEL, str(version), "validation_status",
+                                     f"blocked by release gate ({failed})")
     if not dry_run:
         audit.append("release.promote" if ok else "release.blocked",
                      f"models:/{config.REGISTERED_MODEL}/{version}",

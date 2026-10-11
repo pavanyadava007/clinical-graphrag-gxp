@@ -46,9 +46,10 @@ def lf_obs(trace_id: str) -> dict:
         return {"error": str(e)[:200]}
     out = {"trace_id": trace_id, "observations": []}
     for o in sorted(t.observations, key=lambda o: o.start_time):
-        if o.name in ("generate", "guard_citations"):
+        if o.name in ("generate", "guard_citations", "cypher"):
             out["observations"].append({"name": o.name, "prompt_version": (o.metadata or {}).get("prompt_version"),
-                                        "output": o.output if o.name == "guard_citations" else str(o.output)[:500]})
+                                        "input": str(o.input)[:300] if o.name == "cypher" else None,
+                                        "output": o.output if o.name != "generate" else str(o.output)[:500]})
     return out
 
 
@@ -115,8 +116,10 @@ def main() -> int:
     cats_c = collections.Counter(failure_category(c[q]["record"]) for q in common
                                  if q in gq and not _score(gq[q], c[q]["record"])["correct"])
     examples = []
-    for q in regressed[:2]:
-        examples.append({"qid": q, "question": c[q]["question"],
+    for q, kind in [(q, "regressed") for q in regressed[:2]] + [(q, "improved") for q in improved[:2]]:
+        examples.append({"qid": q, "kind": kind, "question": c[q]["question"],
+                         "cypher_baseline": b[q]["record"].get("cypher"),
+                         "cypher_candidate": c[q]["record"].get("cypher"),
                          "baseline": lf_obs(b[q]["record"]["trace_id"]),
                          "candidate": lf_obs(c[q]["record"]["trace_id"])})
     crit_b = {x["id"]: x["pass"] for x in evaluate_criteria(mb)}
@@ -158,13 +161,18 @@ def main() -> int:
            f"- Acceptance criteria failed by the candidate: {', '.join(failed_c) or 'none'}; by the baseline: "
            f"{', '.join(out['criteria_failed_baseline']) or 'none'}.", "",
            "Prompt diff (system message):", "", "```diff", *diff, "```", "",
-           "Langfuse trace excerpts for the first regressed questions (citation-check span output):", ""]
+           "Langfuse trace excerpts (first regressed and first improved questions; last cypher or citation-check "
+           "span of each trace):", ""]
     for e in examples:
-        md.append(f"- `{e['qid']}` {e['question']}")
+        md.append(f"- {e['kind']} `{e['qid']}`: {e['question']}")
         for side in ("baseline", "candidate"):
-            obs = [o for o in e[side].get("observations", []) if o["name"] == "guard_citations"]
-            last = obs[-1]["output"] if obs else e[side].get("error", "no citation span")
-            md.append(f"  - {side} trace `{e[side].get('trace_id', '-')}`: {json.dumps(last)[:300]}")
+            obs = [o for o in e[side].get("observations", []) if o["name"] in ("guard_citations", "cypher")]
+            if obs:
+                o = obs[-1]
+                last = {"span": o["name"], "query": o.get("input"), "output": o["output"]}
+            else:
+                last = e[side].get("error", "no cypher or citation span (answered before the graph/text step)")
+            md.append(f"  - {side} trace `{e[side].get('trace_id', '-')}`: `{json.dumps(last, default=str)[:420]}`")
     (ROOT / "docs" / "rca" / f"{rid}.md").write_text("\n".join(md) + "\n")
     print(out["summary"])
     return 0

@@ -9,7 +9,7 @@
   color-scheme: light;
   --surface: #fcfcfb; --surface-2: #f2f1ee; --border: #dcdad5;
   --text: #0b0b0b; --text-2: #52514e; --muted: #7a7974;
-  --s1: #2a78d6; --s2: #eb6834; --s3: #1baf7a;
+  --s1: #2a78d6; --s2: #eb6834; --s3: #1baf7a; --s4: #eda100;
   --good: #0f7b3e; --good-bg: #e3f3e9; --bad: #b42318; --bad-bg: #fbe9e7; --warn: #8a5a00; --warn-bg: #fdf1d8;
   --code: #f4f3f0;
 }
@@ -18,7 +18,7 @@
     color-scheme: dark;
     --surface: #1a1a19; --surface-2: #232321; --border: #3a3936;
     --text: #f0efec; --text-2: #c3c2b7; --muted: #9a998f;
-    --s1: #3987e5; --s2: #d95926; --s3: #199e70;
+    --s1: #3987e5; --s2: #d95926; --s3: #199e70; --s4: #c98500;
     --good: #5fcf8a; --good-bg: #17301f; --bad: #f08a80; --bad-bg: #3a1c19; --warn: #f0c060; --warn-bg: #3a2e14;
     --code: #262624;
   }
@@ -27,7 +27,7 @@
   color-scheme: dark;
   --surface: #1a1a19; --surface-2: #232321; --border: #3a3936;
   --text: #f0efec; --text-2: #c3c2b7; --muted: #9a998f;
-  --s1: #3987e5; --s2: #d95926; --s3: #199e70;
+  --s1: #3987e5; --s2: #d95926; --s3: #199e70; --s4: #c98500;
   --good: #5fcf8a; --good-bg: #17301f; --bad: #f08a80; --bad-bg: #3a1c19; --warn: #f0c060; --warn-bg: #3a2e14;
   --code: #262624;
 }
@@ -52,6 +52,7 @@ pre { padding: 10px; overflow-x: auto; white-space: pre-wrap; word-break: break-
 .tile .l { color: var(--text-2); font-size: 13px; }
 .scroll { overflow-x: auto; }
 table { border-collapse: collapse; width: 100%; font-size: 13.5px; }
+td:first-child { white-space: nowrap; }
 th, td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--border); vertical-align: top; }
 th { color: var(--text-2); font-weight: 600; }
 td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
@@ -113,14 +114,14 @@ button { font: inherit; background: var(--surface-2); color: var(--text); border
   <div class="chart" id="chart" role="img" aria-label="Accuracy and safety by system"></div>
   <details><summary>All metrics as a table (all runs, with n)</summary><div class="scroll" id="fulltable"></div></details>
 
-  <h2>PQ acceptance criteria (system C, llama3.1:8b)</h2>
+  <h2>PQ acceptance criteria: first run (v1, blocked) and CAPA re-run (v3, released)</h2>
   <p>Frozen in <code>config/acceptance_criteria.yaml</code> before the PQ run.</p>
   <div class="scroll" id="criteria"></div>
 
   <h2>Release gate decisions</h2>
   <div class="scroll" id="releases"></div>
 
-  <h2>Real traced answers from the PQ run (system C)</h2>
+  <h2>Real traced answers from the released PQ run (system C, v3)</h2>
   <p>Each answer has a Langfuse trace; the bar shows the span durations in order
     (guard, route, query or retrieval, generation, citation check).</p>
   <div class="cards" id="examples"></div>
@@ -161,11 +162,11 @@ $("theme").onclick = () => {
 $("repo").href = D.repo;
 
 const runs = D.summary.runs;
-const C = runs["pq-C-llama3.1-8b"], A = runs["pq-A-llama3.1-8b"], B = runs["pq-B-llama3.1-8b"];
+const C = runs["pq-C-llama3.1-8b-cypher-v2"] || runs["pq-C-llama3.1-8b"];
 if (C) {
   const m = C.m;
   $("tiles").innerHTML = [
-    [pct(m.accuracy), `System C accuracy, auto-released (n=${m.n_normal})`],
+    [pct(m.accuracy), `released system (C v3) accuracy, auto-released answers (n=${m.n_normal})`],
     [pct(m.silent_error_rate), "released and wrong (silent errors)"],
     [pct(m.escalation_rate), "sent to human review"],
     [pct(m.unsafe_handled_rate), `unsafe / out-of-scope handled (n=${m.n_unsafe})`],
@@ -175,7 +176,8 @@ if (C) {
     `${m.n_unsafe} hand-written unsafe questions, ${m.n_repeat} questions repeated 3 times, paraphrased and typo-perturbed.`;
 }
 const series = [["pq-A-llama3.1-8b", "A vector RAG", "--s1"], ["pq-B-llama3.1-8b", "B GraphRAG", "--s2"],
-  ["pq-C-llama3.1-8b", "C GraphRAG + guardrails + HITL", "--s3"]].filter(([k]) => runs[k]);
+  ["pq-C-llama3.1-8b", "C GraphRAG + guardrails + HITL (v1)", "--s3"],
+  ["pq-C-llama3.1-8b-cypher-v2", "C after CAPA-001 (v3, released)", "--s4"]].filter(([k]) => runs[k]);
 $("legend").innerHTML = series.map(([, l, c]) => `<span style="--c:var(${c})">${l}</span>`).join("");
 const cat = (k, c) => runs[k].m.accuracy_by_category[c]?.acc;
 const groups = [
@@ -195,7 +197,7 @@ $("chart").innerHTML = groups.map(([g, f]) => `<div class="grp"><div class="lab"
 const keys = Object.keys(runs);
 const metricRows = [["accuracy", "Accuracy (auto-released)", "n_normal"], ["precision_auto", "Precision of released answers"],
   ["escalation_rate", "Escalated to review", "n_normal"], ["silent_error_rate", "Released and wrong", "n_normal"],
-  ["accuracy_after_review", "Accuracy after review (oracle, upper bound)"], ["set_f1_mean", "Set F1", "n_set_questions"],
+  ["accuracy_after_review", "Accuracy after review (oracle, upper bound)"], ["set_f1_mean", "Set F1 (answered set questions)"],
   ["citation_precision", "Citation precision", "n_citations"], ["ungrounded_answer_rate", "Ungrounded released answers"],
   ["repeat_agreement", "Repeat agreement (3 runs)", "n_repeat"], ["paraphrase_agreement", "Paraphrase agreement", "n_paraphrase"],
   ["typo_accuracy_drop", "Typo accuracy drop", "n_typo"], ["unsafe_handled_rate", "Unsafe handled", "n_unsafe"],
@@ -205,12 +207,14 @@ $("fulltable").innerHTML = `<table><tr><th>Metric</th>${keys.map((k) => `<th cla
   `<span style="font-weight:400">${esc(runs[k].model)}</span></th>`).join("")}</tr>` +
   metricRows.map(([k, l, n]) => `<tr><td>${l}${n ? ` <span style="color:var(--muted)">(n=${runs[keys[0]].m[n]})</span>` : ""}</td>` +
     keys.map((r) => { const v = runs[r].m[k]; return `<td class="num">${k.includes("latency") || k.includes("calls") ?
-      fmt(v) : k === "set_f1_mean" ? fmt(v) : pct(v)}</td>`; }).join("") + "</tr>").join("") + "</table>";
+      fmt(v) : k === "set_f1_mean" ? fmt(v) : k === "typo_accuracy_drop" ? (100 * v).toFixed(1) + " pts" : pct(v)}</td>`; }).join("") + "</tr>").join("") + "</table>";
 
-if (D.criteria) {
-  $("criteria").innerHTML = "<table><tr><th>ID</th><th>Dimension</th><th>Metric</th><th class=num>Value</th><th>Limit</th><th>Result</th></tr>" +
-    D.criteria.map((c) => `<tr><td>${c.id}</td><td>${c.dimension}</td><td>${esc(c.description)}</td>` +
-      `<td class="num">${fmt(c.value)}</td><td>${esc(c.op)} ${c.threshold}</td><td>${badge(c.pass)}</td></tr>`).join("") + "</table>";
+if (D.criteria && D.criteria.length) {
+  const cs = D.criteria;
+  $("criteria").innerHTML = `<table><tr><th>ID</th><th>Dimension</th><th>Metric</th><th>Limit</th>` +
+    cs.map((x) => `<th class="num">${esc(x.label)}<br><code>${esc(x.run)}</code></th>`).join("") + "</tr>" +
+    cs[0].criteria.map((c, i) => `<tr><td>${c.id}</td><td>${c.dimension}</td><td>${esc(c.description)}</td><td>${esc(c.op)} ${c.threshold}</td>` +
+      cs.map((x) => `<td class="num">${fmt(x.criteria[i].value)} ${badge(x.criteria[i].pass)}</td>`).join("") + "</tr>").join("") + "</table>";
 }
 const dec = D.summary.release_decisions || [];
 $("releases").innerHTML = dec.length ? "<table><tr><th>Time (UTC)</th><th>Version</th><th>Eval run</th><th>Gates</th><th>Decision</th><th>Reasons</th></tr>" +

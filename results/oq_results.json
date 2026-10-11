@@ -1,5 +1,5 @@
 {
- "generated_utc": "2026-10-11T07:16:34+00:00",
+ "generated_utc": "2026-10-11T08:45:51+00:00",
  "python": "3.11.16",
  "exitstatus": 0,
  "tests": [
@@ -9,7 +9,7 @@
     "URS-009"
    ],
    "outcome": "passed",
-   "duration_s": 0.001
+   "duration_s": 0.002
   },
   {
    "nodeid": "tests/test_cypher_guard.py::test_allowed_queries_pass_and_get_limit[MATCH (l:Label)-[:MADE_BY]->(m:Manufacturer) WHERE l.generic_name = 'torsemide' RETURN DISTINCT m.name AS answer]",
@@ -174,7 +174,7 @@
     "URS-002"
    ],
    "outcome": "passed",
-   "duration_s": 28.857
+   "duration_s": 27.845
   },
   {
    "nodeid": "tests/test_evalset_prompts.py::test_gold_set_is_deterministic_and_derived_from_fields",
@@ -182,7 +182,7 @@
     "URS-021"
    ],
    "outcome": "passed",
-   "duration_s": 0.026
+   "duration_s": 0.023
   },
   {
    "nodeid": "tests/test_evalset_prompts.py::test_gold_builder_uses_no_llm",
@@ -198,7 +198,7 @@
     "URS-016"
    ],
    "outcome": "passed",
-   "duration_s": 0.006
+   "duration_s": 0.007
   },
   {
    "nodeid": "tests/test_guarded_system.py::test_graph_answer_released_with_query_evidence",
@@ -206,7 +206,7 @@
     "URS-008"
    ],
    "outcome": "passed",
-   "duration_s": 0.053
+   "duration_s": 0.046
   },
   {
    "nodeid": "tests/test_guarded_system.py::test_write_query_is_rejected_then_repaired",
@@ -214,7 +214,7 @@
     "URS-009"
    ],
    "outcome": "passed",
-   "duration_s": 0.022
+   "duration_s": 0.017
   },
   {
    "nodeid": "tests/test_guarded_system.py::test_empty_graph_result_escalates",
@@ -222,7 +222,7 @@
     "URS-013"
    ],
    "outcome": "passed",
-   "duration_s": 0.02
+   "duration_s": 0.016
   },
   {
    "nodeid": "tests/test_guarded_system.py::test_ambiguous_label_escalates",
@@ -230,7 +230,7 @@
     "URS-013"
    ],
    "outcome": "passed",
-   "duration_s": 0.017
+   "duration_s": 0.016
   },
   {
    "nodeid": "tests/test_guarded_system.py::test_unverifiable_citation_escalates_after_one_retry",
@@ -239,7 +239,7 @@
     "URS-010"
    ],
    "outcome": "passed",
-   "duration_s": 0.019
+   "duration_s": 0.017
   },
   {
    "nodeid": "tests/test_guarded_system.py::test_verified_citation_is_released",
@@ -248,7 +248,7 @@
     "URS-008"
    ],
    "outcome": "passed",
-   "duration_s": 0.017
+   "duration_s": 0.016
   },
   {
    "nodeid": "tests/test_guarded_system.py::test_injection_refused_before_any_llm_call",
@@ -264,7 +264,7 @@
     "URS-012"
    ],
    "outcome": "passed",
-   "duration_s": 0.017
+   "duration_s": 0.016
   },
   {
    "nodeid": "tests/test_guarded_system.py::test_policy_classifier_outcomes[harmful-refused]",
@@ -296,7 +296,7 @@
     "URS-013"
    ],
    "outcome": "passed",
-   "duration_s": 0.019
+   "duration_s": 0.02
   },
   {
    "nodeid": "tests/test_guarded_system.py::test_spans_recorded_without_langfuse",
@@ -416,7 +416,7 @@
     "URS-022"
    ],
    "outcome": "passed",
-   "duration_s": 0.007
+   "duration_s": 0.006
   },
   {
    "nodeid": "tests/test_guards_audit_hitl.py::test_roles_enforced",
@@ -424,7 +424,7 @@
     "URS-023"
    ],
    "outcome": "passed",
-   "duration_s": 0.011
+   "duration_s": 0.01
   },
   {
    "nodeid": "tests/test_guards_audit_hitl.py::test_review_queue_decisions",
@@ -432,7 +432,7 @@
     "URS-014"
    ],
    "outcome": "passed",
-   "duration_s": 0.012
+   "duration_s": 0.011
   },
   {
    "nodeid": "tests/test_release_and_tracking.py::test_all_gates_pass",
@@ -448,7 +448,7 @@
     "URS-025"
    ],
    "outcome": "passed",
-   "duration_s": 0.005
+   "duration_s": 0.006
   },
   {
    "nodeid": "tests/test_release_and_tracking.py::test_missing_approval_and_traceability_block",
@@ -456,7 +456,7 @@
     "URS-025"
    ],
    "outcome": "passed",
-   "duration_s": 0.004
+   "duration_s": 0.005
   },
   {
    "nodeid": "tests/test_release_and_tracking.py::test_author_cannot_approve",
@@ -464,7 +464,7 @@
     "URS-024"
    ],
    "outcome": "passed",
-   "duration_s": 0.522
+   "duration_s": 0.528
   },
   {
    "nodeid": "tests/test_release_and_tracking.py::test_approval_over_changed_config_is_invalid",
@@ -480,7 +480,7 @@
     "URS-018"
    ],
    "outcome": "passed",
-   "duration_s": 0.005
+   "duration_s": 0.006
   },
   {
    "nodeid": "tests/test_release_and_tracking.py::test_broken_audit_trail_blocks",
@@ -496,7 +496,7 @@
     "URS-017"
    ],
    "outcome": "passed",
-   "duration_s": 0.953
+   "duration_s": 0.951
   },
   {
    "nodeid": "tests/test_security_and_integration.py::test_no_secrets_in_tracked_files",
@@ -504,7 +504,7 @@
     "URS-026"
    ],
    "outcome": "passed",
-   "duration_s": 0.041
+   "duration_s": 0.052
   },
   {
    "nodeid": "tests/test_security_and_integration.py::test_graph_snapshot_matches_gold_report",
@@ -512,7 +512,7 @@
     "URS-007"
    ],
    "outcome": "passed",
-   "duration_s": 0.358
+   "duration_s": 0.363
   },
   {
    "nodeid": "tests/test_security_and_integration.py::test_read_only_session_blocks_writes_even_without_validator",
@@ -520,15 +520,15 @@
     "URS-009"
    ],
    "outcome": "passed",
-   "duration_s": 0.004
+   "duration_s": 0.005
   },
   {
    "nodeid": "tests/test_security_and_integration.py::test_langfuse_sample_has_spans_and_scores",
    "req": [
     "URS-019"
    ],
-   "outcome": "skipped",
-   "duration_s": 0.0
+   "outcome": "passed",
+   "duration_s": 0.001
   },
   {
    "nodeid": "tests/test_security_and_integration.py::test_registered_versions_carry_lineage",
@@ -536,7 +536,7 @@
     "URS-018"
    ],
    "outcome": "passed",
-   "duration_s": 0.072
+   "duration_s": 0.069
   },
   {
    "nodeid": "tests/test_text_and_metrics.py::test_set_scores_exact_and_partial",

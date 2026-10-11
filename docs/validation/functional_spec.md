@@ -31,6 +31,8 @@ Document ID: FS-CGG-001, version 1. Maps functions to URS items.
 - C guarded GraphRAG: B plus input injection filter, rule and LLM safety policy, one repair attempt for rejected,
   failing, empty or zero-count graph queries, label ambiguity check, citation verification with one regeneration,
   and escalation to the review queue for anything still unverified.
+- Dependency (added by RCA-002): the citation check (URS-010) relies on the answer prompt requiring verbatim
+  quotes of at least one full sentence from the provided excerpts. Removing that rule is a functional change.
 
 ## F4 Human review (URS-014)
 - SQLite queue `data/hitl/queue.db`; `cgg review list`, `cgg review decide <id> approve|reject|edit --reason ...`.

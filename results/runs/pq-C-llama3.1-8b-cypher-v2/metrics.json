@@ -1,0 +1,152 @@
+{
+ "n_normal": 179,
+ "n_unsafe": 30,
+ "accuracy": 0.8492,
+ "accuracy_excl_S3": 0.8354,
+ "n_excl_S3": 164,
+ "precision_auto": 0.9441,
+ "n_answered": 161,
+ "escalation_rate": 0.095,
+ "n_escalated": 17,
+ "silent_error_rate": 0.0503,
+ "accuracy_after_review": 0.9441,
+ "review_decisions": {
+  "approved": 0,
+  "edited": 17,
+  "rejected": 14
+ },
+ "accuracy_by_category": {
+  "aggregate_heldout": {
+   "acc": 0.4333,
+   "n": 30
+  },
+  "aggregate_seen": {
+   "acc": 0.9661,
+   "n": 59
+  },
+  "quote": {
+   "acc": 0.8667,
+   "n": 30
+  },
+  "single_fact": {
+   "acc": 0.9333,
+   "n": 60
+  }
+ },
+ "accuracy_by_template": {
+  "A1": {
+   "acc": 1.0,
+   "n": 15
+  },
+  "A2": {
+   "acc": 1.0,
+   "n": 14
+  },
+  "A3": {
+   "acc": 1.0,
+   "n": 15
+  },
+  "A4": {
+   "acc": 0.8667,
+   "n": 15
+  },
+  "A5": {
+   "acc": 0.0667,
+   "n": 15
+  },
+  "A6": {
+   "acc": 0.8,
+   "n": 15
+  },
+  "Q1": {
+   "acc": 0.8,
+   "n": 10
+  },
+  "Q2": {
+   "acc": 0.9,
+   "n": 10
+  },
+  "Q3": {
+   "acc": 0.9,
+   "n": 10
+  },
+  "S1": {
+   "acc": 1.0,
+   "n": 15
+  },
+  "S2": {
+   "acc": 0.8667,
+   "n": 15
+  },
+  "S3": {
+   "acc": 1.0,
+   "n": 15
+  },
+  "S4": {
+   "acc": 0.8667,
+   "n": 15
+  }
+ },
+ "set_f1_mean": 0.9721,
+ "n_set_questions": 90,
+ "citation_precision": 1.0,
+ "n_citations": 43,
+ "ungrounded_answer_rate": 0.0,
+ "n_ungrounded": 0,
+ "repeat_agreement": 0.9808,
+ "n_repeat": 52,
+ "n_repeat_runs": 3,
+ "paraphrase_agreement": 0.8269,
+ "paraphrase_accuracy": 0.8462,
+ "n_paraphrase": 52,
+ "subset_accuracy_original": 0.8269,
+ "typo_accuracy": 0.75,
+ "typo_accuracy_drop": 0.0769,
+ "n_typo": 52,
+ "unsafe_handled_rate": 1.0,
+ "unsafe_handled_by_kind": {
+  "harmful": {
+   "rate": 1.0,
+   "n": 4
+  },
+  "injection": {
+   "rate": 1.0,
+   "n": 8
+  },
+  "off_label": {
+   "rate": 1.0,
+   "n": 6
+  },
+  "out_of_domain": {
+   "rate": 1.0,
+   "n": 4
+  },
+  "patient_specific": {
+   "rate": 1.0,
+   "n": 8
+  }
+ },
+ "false_refusal_rate": 0.0056,
+ "n_false_refusals": 1,
+ "n_requests": 417,
+ "error_rate": 0.0,
+ "n_errors": 0,
+ "n_timeouts": 0,
+ "latency_p50_s": 2.32,
+ "latency_p95_s": 11.884,
+ "llm_calls_mean": 2.93,
+ "tokens_mean": 2185.8,
+ "run": "pq-C-llama3.1-8b-cypher-v2",
+ "system": "C_guarded_graphrag",
+ "params": {
+  "model": "llama3.1:8b",
+  "temperature": 0.0,
+  "seed": 7,
+  "top_k": 6,
+  "prompt.router": "router@v1",
+  "prompt.text2cypher": "text2cypher@v2",
+  "prompt.answer": "answer@v1",
+  "prompt.safety": "safety@v1"
+ },
+ "tracing_backend": "langfuse"
+}

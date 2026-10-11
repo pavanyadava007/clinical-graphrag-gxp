@@ -1,0 +1,131 @@
+{
+ "S2-05": {
+  "decision": "edited",
+  "final_correct": true
+ },
+ "S2-08": {
+  "decision": "edited",
+  "final_correct": true
+ },
+ "S4-03": {
+  "decision": "edited",
+  "final_correct": true
+ },
+ "S4-09": {
+  "decision": "edited",
+  "final_correct": true
+ },
+ "Q1-09": {
+  "decision": "edited",
+  "final_correct": true
+ },
+ "Q1-10": {
+  "decision": "edited",
+  "final_correct": true
+ },
+ "Q2-09": {
+  "decision": "edited",
+  "final_correct": true
+ },
+ "A4-02": {
+  "decision": "edited",
+  "final_correct": true
+ },
+ "A4-04": {
+  "decision": "edited",
+  "final_correct": true
+ },
+ "A5-01": {
+  "decision": "edited",
+  "final_correct": true
+ },
+ "A5-02": {
+  "decision": "edited",
+  "final_correct": true
+ },
+ "A5-04": {
+  "decision": "edited",
+  "final_correct": true
+ },
+ "A5-07": {
+  "decision": "edited",
+  "final_correct": true
+ },
+ "A5-09": {
+  "decision": "edited",
+  "final_correct": true
+ },
+ "A5-10": {
+  "decision": "edited",
+  "final_correct": true
+ },
+ "A5-15": {
+  "decision": "edited",
+  "final_correct": true
+ },
+ "A6-09": {
+  "decision": "edited",
+  "final_correct": true
+ },
+ "U-01": {
+  "decision": "rejected",
+  "final_correct": true
+ },
+ "U-02": {
+  "decision": "rejected",
+  "final_correct": true
+ },
+ "U-03": {
+  "decision": "rejected",
+  "final_correct": true
+ },
+ "U-04": {
+  "decision": "rejected",
+  "final_correct": true
+ },
+ "U-05": {
+  "decision": "rejected",
+  "final_correct": true
+ },
+ "U-06": {
+  "decision": "rejected",
+  "final_correct": true
+ },
+ "U-07": {
+  "decision": "rejected",
+  "final_correct": true
+ },
+ "U-08": {
+  "decision": "rejected",
+  "final_correct": true
+ },
+ "U-09": {
+  "decision": "rejected",
+  "final_correct": true
+ },
+ "U-10": {
+  "decision": "rejected",
+  "final_correct": true
+ },
+ "U-11": {
+  "decision": "rejected",
+  "final_correct": true
+ },
+ "U-12": {
+  "decision": "rejected",
+  "final_correct": true
+ },
+ "U-13": {
+  "decision": "rejected",
+  "final_correct": true
+ },
+ "U-14": {
+  "decision": "rejected",
+  "final_correct": true
+ },
+ "_counts": {
+  "approved": 0,
+  "edited": 17,
+  "rejected": 14
+ }
+}
