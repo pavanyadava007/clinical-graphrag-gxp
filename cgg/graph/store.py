@@ -21,7 +21,8 @@ CONSTRAINTS = [
     "CREATE CONSTRAINT manufacturer_name IF NOT EXISTS FOR (n:Manufacturer) REQUIRE n.name IS UNIQUE",
     "CREATE INDEX label_generic IF NOT EXISTS FOR (n:Label) ON (n.generic_name)",
     "CREATE INDEX label_brand IF NOT EXISTS FOR (n:Label) ON (n.brand_name)",
-    "CREATE FULLTEXT INDEX label_names IF NOT EXISTS FOR (n:Label) ON EACH [n.brand_name, n.generic_name, n.manufacturer]",
+    "CREATE FULLTEXT INDEX label_names IF NOT EXISTS FOR (n:Label) "
+    "ON EACH [n.brand_name, n.generic_name, n.manufacturer]",
 ]
 
 

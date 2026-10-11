@@ -38,7 +38,7 @@ def build(batch: int = 64) -> dict:
 
     man = {
         "model": config.EMBED_MODEL,
-        "model_digest": Ollama(model=config.EMBED_MODEL).model_digest(),
+        "model_digest": Ollama(model=config.EMBED_MODEL, host=config.EMBED_HOST).model_digest(),
         "n_chunks": int(m.shape[0]),
         "dims": int(m.shape[1]),
         "embeddings_sha256": hashlib.sha256(EMB.read_bytes()).hexdigest(),

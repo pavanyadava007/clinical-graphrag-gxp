@@ -5,7 +5,7 @@ from __future__ import annotations
 
 import hashlib
 from dataclasses import dataclass
-from functools import lru_cache
+from functools import cache
 from pathlib import Path
 
 import yaml
@@ -40,7 +40,7 @@ def render(template: str, **vars) -> str:
     return out
 
 
-@lru_cache(maxsize=None)
+@cache
 def load(name: str, version: int) -> Prompt:
     d = yaml.safe_load((PROMPT_DIR / f"{name}.v{version}.yaml").read_text())
     return Prompt(d["name"], int(d["version"]), d.get("description", ""), d["system"], d["user"])

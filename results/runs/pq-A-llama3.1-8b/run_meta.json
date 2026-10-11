@@ -1,0 +1,17 @@
+{
+ "run": "pq-A-llama3.1-8b",
+ "system": "A_vector_rag",
+ "started_utc": "2026-10-11T05:42:47.495578+00:00",
+ "params": {
+  "model": "llama3.1:8b",
+  "temperature": 0.0,
+  "seed": 7,
+  "top_k": 6,
+  "prompt.router": "router@v1",
+  "prompt.text2cypher": "text2cypher@v1",
+  "prompt.answer": "answer@v1",
+  "prompt.safety": "safety@v1"
+ },
+ "tracing_backend": "langfuse",
+ "n_planned": 417
+}

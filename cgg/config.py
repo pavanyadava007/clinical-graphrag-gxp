@@ -27,7 +27,7 @@ if os.environ.get("CGG_NO_LOCAL_ENV") != "1":
     _load_local_env()
 DATA = ROOT / "data"
 RAW_DIR = DATA / "raw" / "openfda"
-LAKE = DATA / "lake"  # Delta Lake tables (bronze / silver / gold)
+LAKE = Path(os.environ.get("CGG_LAKE", DATA / "lake"))  # Delta Lake tables (bronze / silver / gold)
 GOLD_DIR = DATA / "gold"  # embeddings and other non-Delta gold artifacts
 HITL_DIR = DATA / "hitl"
 RESULTS = ROOT / "results"
@@ -81,6 +81,7 @@ CHUNK_OVERLAP = 200
 OLLAMA_HOST = os.environ.get("CGG_OLLAMA_HOST", "http://127.0.0.1:11501")
 LLM_MODEL = os.environ.get("CGG_LLM_MODEL", "llama3.1:8b")
 EMBED_MODEL = os.environ.get("CGG_EMBED_MODEL", "nomic-embed-text")
+EMBED_HOST = os.environ.get("CGG_EMBED_HOST", OLLAMA_HOST)
 NEO4J_URI = os.environ.get("CGG_NEO4J_URI", "bolt://127.0.0.1:7687")
 NEO4J_USER = os.environ.get("CGG_NEO4J_USER", "neo4j")
 MLFLOW_URI = os.environ.get("MLFLOW_TRACKING_URI", f"sqlite:///{ROOT / 'mlflow.db'}")

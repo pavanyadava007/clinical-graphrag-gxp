@@ -46,7 +46,8 @@ TEMPLATES = {
            "What is {brand} by {mfr} indicated for, according to its label? Quote it."),
     "A1": ("aggregate_seen", "int", "How many labels in the corpus have the pharmacologic class {epc}?",
            "What is the number of {epc} labels in the corpus?"),
-    "A2": ("aggregate_seen", "set", "Which generic drugs in the class {epc} have a boxed warning on at least one label?",
+    "A2": ("aggregate_seen", "set",
+           "Which generic drugs in the class {epc} have a boxed warning on at least one label?",
            "List the generic drugs of class {epc} that carry a boxed warning on any label."),
     "A3": ("aggregate_seen", "int", "How many {epc} labels have the route {route}?",
            "Count the labels in class {epc} that are given by the {route} route."),
@@ -79,7 +80,7 @@ def build(labels: pd.DataFrame | None = None, sections: pd.DataFrame | None = No
     pair_n = L.groupby(["brand_name", "manufacturer"]).set_id.transform("count")
     uniq = L[(pair_n == 1)]
     uniq = uniq[~uniq.apply(lambda r: (r.brand_name.lower(), r.manufacturer.lower()) in FEWSHOT_LABELS, axis=1)]
-    sec_set = set(zip(sections.set_id, sections.section))
+    sec_set = set(zip(sections.set_id, sections.section, strict=False))
     qs: list[dict] = []
 
     def add(tid: str, ents: dict, gold, extra: dict | None = None):

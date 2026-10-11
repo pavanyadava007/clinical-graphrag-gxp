@@ -1,0 +1,43 @@
+resources:
+  jobs:
+    cgg_pipeline:
+      name: cgg-${bundle.target}-pipeline
+      tags:
+        system: clinical-graphrag-gxp
+        gxp_impact: high
+      parameters:
+        - name: catalog
+          default: ${var.catalog}
+      job_clusters:
+        - job_cluster_key: main
+          new_cluster:
+            spark_version: 15.4.x-scala2.12   # Spark 3.5 + Delta 3.2, the versions used locally
+            node_type_id: Standard_D4ds_v5
+            num_workers: 1
+            data_security_mode: SINGLE_USER
+      tasks:
+        - task_key: medallion
+          job_cluster_key: main
+          notebook_task:
+            notebook_path: ../notebooks/01_medallion.py
+          libraries:
+            - whl: ../dist/*.whl
+        - task_key: build_graph
+          depends_on: [{task_key: medallion}]
+          job_cluster_key: main
+          notebook_task:
+            notebook_path: ../notebooks/02_build_graph.py
+            base_parameters:
+              secret_scope: ${var.neo4j_secret_scope}
+          libraries:
+            - whl: ../dist/*.whl
+        - task_key: evaluate
+          depends_on: [{task_key: build_graph}]
+          job_cluster_key: main
+          notebook_task:
+            notebook_path: ../notebooks/03_evaluate_register.py
+            base_parameters:
+              secret_scope: ${var.neo4j_secret_scope}
+              llm_endpoint: ${var.llm_endpoint}
+          libraries:
+            - whl: ../dist/*.whl

@@ -1,0 +1,17 @@
+# FMEA. S = severity, O = occurrence, D = detectability (1 = always detected, 5 = unlikely detected), 1-5 each.
+# RPN = S x O x D before mitigation; residual is judged after the linked controls and their test evidence.
+risks:
+  - {id: R-01, hazard: "Hallucinated or wrong answer released to medical-information staff", effect: "Wrong label information passed on", S: 5, O: 4, D: 4, urs: [URS-008, URS-010, URS-013, URS-020], residual: "Measured by silent_error_rate on the PQ run; remaining errors are listed per question in the eval table"}
+  - {id: R-02, hazard: "Answer taken from the wrong label (same brand, other manufacturer or version)", effect: "Wrong product information", S: 4, O: 4, D: 3, urs: [URS-008, URS-013], residual: "Ambiguous names escalate; label set_id is cited in every text answer"}
+  - {id: R-03, hazard: "LLM-written Cypher changes or deletes graph data", effect: "Corrupted knowledge graph", S: 5, O: 2, D: 3, urs: [URS-009, URS-007], residual: "Allowlist plus READ transactions; snapshot hash detects any change"}
+  - {id: R-04, hazard: "Prompt injection changes system behaviour", effect: "Unsafe or unguarded output", S: 4, O: 3, D: 3, urs: [URS-011], residual: "Rule filter plus policy classifier; measured on the injection subset"}
+  - {id: R-05, hazard: "Patient-specific or off-label advice given", effect: "Potential patient harm", S: 5, O: 3, D: 3, urs: [URS-012, URS-014], residual: "Refused or routed to a human; measured on the safety set"}
+  - {id: R-06, hazard: "Source data corrupted or changed without notice", effect: "Answers based on unknown data", S: 4, O: 2, D: 3, urs: [URS-001, URS-002, URS-003], residual: "sha256 manifest checked before every ingest"}
+  - {id: R-07, hazard: "Silent data-quality problems (missing fields, duplicates, out-of-scope records)", effect: "Incomplete or wrong graph facts", S: 3, O: 4, D: 3, urs: [URS-004, URS-005, URS-006], residual: "Expectations with quarantine; counts in the pipeline report"}
+  - {id: R-08, hazard: "Unapproved change (prompt, model, data) reaches production", effect: "Unvalidated behaviour in use", S: 5, O: 3, D: 3, urs: [URS-016, URS-018, URS-024, URS-025], residual: "Release gate blocks; demonstrated in RCA-001"}
+  - {id: R-09, hazard: "Results not reproducible (unknown model, prompt or data versions)", effect: "Cannot investigate or defend a result", S: 3, O: 3, D: 4, urs: [URS-003, URS-017, URS-018, URS-021], residual: "Lineage tags on every run and version"}
+  - {id: R-10, hazard: "Audit trail edited or truncated", effect: "Loss of objective evidence", S: 4, O: 2, D: 4, urs: [URS-022], residual: "Hash chain verify in the release gate"}
+  - {id: R-11, hazard: "Over-refusal blocks normal use", effect: "Users bypass the tool", S: 2, O: 3, D: 2, urs: [URS-015], residual: "False refusal rate measured on all normal questions"}
+  - {id: R-12, hazard: "LLM or prompt update changes behaviour", effect: "Regression in answers", S: 4, O: 3, D: 3, urs: [URS-020, URS-025, URS-019], residual: "PQ re-run per candidate; second-model comparison shows sensitivity"}
+  - {id: R-13, hazard: "Service outage or timeouts", effect: "Questions unanswered", S: 2, O: 3, D: 1, urs: [URS-027], residual: "Errors recorded as outcomes, never as answers"}
+  - {id: R-14, hazard: "Secrets leaked through the repository", effect: "Unauthorised access", S: 4, O: 2, D: 2, urs: [URS-026, URS-023], residual: "Secrets only in gitignored infra/.env; repository scan test"}

@@ -59,7 +59,8 @@ def _hash(rec: dict) -> str:
 
 
 def append(action: str, obj: str, details: dict | None = None, actor: str | None = None,
-           path: Path = config.AUDIT_LOG) -> dict:
+           path: Path | None = None) -> dict:
+    path = path or config.AUDIT_LOG
     path.parent.mkdir(parents=True, exist_ok=True)
     with open(path, "a+") as f:
         fcntl.flock(f, fcntl.LOCK_EX)
@@ -86,13 +87,14 @@ def append(action: str, obj: str, details: dict | None = None, actor: str | None
     return rec
 
 
-def read(path: Path = config.AUDIT_LOG) -> list[dict]:
+def read(path: Path | None = None) -> list[dict]:
+    path = path or config.AUDIT_LOG
     if not path.exists():
         return []
     return [json.loads(ln) for ln in path.read_text().splitlines() if ln.strip()]
 
 
-def verify(path: Path = config.AUDIT_LOG) -> dict:
+def verify(path: Path | None = None) -> dict:
     events = read(path)
     prev = GENESIS
     for i, e in enumerate(events, 1):

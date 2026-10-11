@@ -70,7 +70,7 @@ def _digest_from_tags(o: Ollama) -> str:
     return "unknown"
 
 
-def embed(texts: list[str], model: str = config.EMBED_MODEL, host: str = config.OLLAMA_HOST,
+def embed(texts: list[str], model: str = config.EMBED_MODEL, host: str = config.EMBED_HOST,
           prefix: str = "search_document: ") -> list[list[float]]:
     """nomic-embed-text expects task prefixes: search_document for chunks, search_query for questions."""
     with httpx.Client(timeout=300) as c:

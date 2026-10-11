@@ -30,7 +30,7 @@ class SpanRecord:
 
 
 class Trace:
-    def __init__(self, tracer: "Tracer", name: str, input: Any, metadata: dict, tags: list[str]):
+    def __init__(self, tracer: Tracer, name: str, input: Any, metadata: dict, tags: list[str]):
         self.tracer = tracer
         self.id = uuid.uuid4().hex
         self.spans: list[SpanRecord] = []
@@ -66,7 +66,8 @@ class Trace:
             self._lf.generation(
                 name=name, model=model, model_parameters=params,
                 input=[{"role": "system", "content": system}, {"role": "user", "content": user}],
-                output=output, usage={"input": usage.get("prompt_tokens", 0), "output": usage.get("completion_tokens", 0)},
+                output=output,
+                usage={"input": usage.get("prompt_tokens", 0), "output": usage.get("completion_tokens", 0)},
                 start_time=datetime.fromtimestamp(now - latency_s, tz=timezone.utc),
                 end_time=datetime.fromtimestamp(now, tz=timezone.utc),
                 metadata={"prompt_version": prompt_version})

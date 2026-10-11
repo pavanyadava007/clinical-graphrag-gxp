@@ -1,0 +1,31 @@
+# User Requirements Specification (machine-readable source of urs.md and the traceability matrix).
+# gxp_impact: High = could affect the correctness of information given to medical-information staff
+# verification: oq = automated OQ tests (pytest marker req("URS-xxx")); pq = PQ acceptance criteria ids
+requirements:
+  - {id: URS-001, area: Data, gxp_impact: High, text: "Ingest FDA drug labels from openFDA and record the query, fetch time and sha256 of every raw response.", verification: {oq: true, pq: []}}
+  - {id: URS-002, area: Data, gxp_impact: High, text: "Keep raw data unchanged (append-only bronze) and detect any change to raw files before ingestion.", verification: {oq: true, pq: []}}
+  - {id: URS-003, area: Data, gxp_impact: Medium, text: "Record Delta table versions for every pipeline run so any earlier state can be re-read (time travel).", verification: {oq: true, pq: []}}
+  - {id: URS-004, area: Data, gxp_impact: High, text: "Apply data-quality expectations in silver; quarantine failing records with the failed expectation names and report counts.", verification: {oq: true, pq: []}}
+  - {id: URS-005, area: Data, gxp_impact: Medium, text: "Resolve duplicate label records deterministically (latest version per set_id).", verification: {oq: true, pq: []}}
+  - {id: URS-006, area: Graph, gxp_impact: High, text: "Build the knowledge graph from structured openFDA fields only; mark any extracted edge with its method and source section.", verification: {oq: true, pq: []}}
+  - {id: URS-007, area: Graph, gxp_impact: Medium, text: "Load the graph idempotently and verify its content against the gold tables with a snapshot hash.", verification: {oq: true, pq: []}}
+  - {id: URS-008, area: QA, gxp_impact: High, text: "Answer label fact and aggregate questions; every released answer carries verified citations (set_id, section, verbatim quote) or the executed graph query as evidence.", verification: {oq: true, pq: [AC-01, AC-02, AC-04, AC-05]}}
+  - {id: URS-009, area: QA, gxp_impact: High, text: "Validate LLM-written Cypher against a read-only allowlist and run it in read-only transactions with a timeout.", verification: {oq: true, pq: []}}
+  - {id: URS-010, area: QA, gxp_impact: High, text: "Verify citations: the quote must occur in the cited section of the cited label.", verification: {oq: true, pq: [AC-04]}}
+  - {id: URS-011, area: Safety, gxp_impact: High, text: "Refuse prompt-injection and database-command attempts.", verification: {oq: true, pq: [AC-09]}}
+  - {id: URS-012, area: Safety, gxp_impact: High, text: "Refuse or route to a human reviewer any patient-specific, off-label or harmful question.", verification: {oq: true, pq: [AC-09]}}
+  - {id: URS-013, area: HITL, gxp_impact: High, text: "Escalate low-confidence answers (unverifiable citation, failed or empty graph query, ambiguous label) to human review instead of releasing them.", verification: {oq: true, pq: [AC-03]}}
+  - {id: URS-014, area: HITL, gxp_impact: High, text: "Let reviewers approve, reject or edit escalated answers, recording identity, role, reason and time.", verification: {oq: true, pq: []}}
+  - {id: URS-015, area: Safety, gxp_impact: Medium, text: "Do not refuse normal label questions at a rate above the accepted limit.", verification: {oq: false, pq: [AC-10]}}
+  - {id: URS-016, area: Lifecycle, gxp_impact: High, text: "Version-control every prompt and register each version with a content hash.", verification: {oq: true, pq: []}}
+  - {id: URS-017, area: Lifecycle, gxp_impact: High, text: "Record for every evaluation run the model, parameters, prompt versions, dataset digests, Delta versions, metrics and per-question results in MLflow.", verification: {oq: true, pq: []}}
+  - {id: URS-018, area: Lifecycle, gxp_impact: High, text: "Tag every registered model version with lineage (git commit, eval run, gold set hash, KG snapshot hash, Delta versions, embeddings hash, prompt versions, LLM digest, author).", verification: {oq: true, pq: []}}
+  - {id: URS-019, area: Observability, gxp_impact: Medium, text: "Trace every question with spans for routing, query, retrieval, generation and guards, and attach evaluation scores to traces.", verification: {oq: true, pq: []}}
+  - {id: URS-020, area: Evaluation, gxp_impact: High, text: "Evaluate accuracy, grounding, consistency, robustness, safety and operational reliability with defined metrics, n and thresholds.", verification: {oq: true, pq: [AC-06, AC-07, AC-08]}}
+  - {id: URS-021, area: Evaluation, gxp_impact: High, text: "Derive gold answers deterministically from structured data, without an LLM.", verification: {oq: true, pq: []}}
+  - {id: URS-022, area: Audit, gxp_impact: High, text: "Record GxP-relevant actions in an append-only, hash-chained audit trail and detect tampering.", verification: {oq: true, pq: []}}
+  - {id: URS-023, area: Access, gxp_impact: High, text: "Restrict ingest, register, approve, promote and review actions by role.", verification: {oq: true, pq: []}}
+  - {id: URS-024, area: Release, gxp_impact: High, text: "Prevent the author of a model version from approving it (segregation of duties).", verification: {oq: true, pq: []}}
+  - {id: URS-025, area: Release, gxp_impact: High, text: "Block promotion to production unless acceptance criteria, traceability, approval, lineage and audit checks all pass; record every decision.", verification: {oq: true, pq: []}}
+  - {id: URS-026, area: Security, gxp_impact: Medium, text: "Keep secrets (database password, tracing keys, tokens) out of the repository.", verification: {oq: true, pq: []}}
+  - {id: URS-027, area: Operations, gxp_impact: Low, text: "Meet the error-rate and latency targets on the reference host.", verification: {oq: false, pq: [AC-11, AC-12]}}

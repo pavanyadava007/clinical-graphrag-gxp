@@ -18,6 +18,7 @@ from cgg.metrics import score, summarize
 from cgg.systems.base import SystemConfig
 from cgg.systems.qa import SYSTEMS
 from cgg.tracing import Tracer
+from cgg.tracking import git_commit
 
 RUNS = config.RESULTS / "runs"
 ORACLE = "oracle-reviewer"
@@ -55,7 +56,9 @@ def run_eval(system: str, run_name: str, cfg: SystemConfig | None = None, repeat
         plan += [(q, "paraphrase", q["paraphrase"]) for q in subset]
         plan += [(q, "typo", q["typo"]) for q in subset]
     meta_run = {"run": run_name, "system": sys_obj.name, "started_utc": datetime.now(timezone.utc).isoformat(),
-                "params": cfg.as_params(), "tracing_backend": tracer.backend, "n_planned": len(plan)}
+                "params": cfg.as_params(), "tracing_backend": tracer.backend, "n_planned": len(plan),
+                "llm_host": sys_obj.caller.llm.host, "llm_digest": sys_obj.caller.llm.model_digest(),
+                "git_commit": git_commit()}
     (out_dir / "run_meta.json").write_text(json.dumps(meta_run, indent=1))
     # warm-up (model load into GPU memory) so the first measured latency is not a cold start
     sys_obj.caller.llm.chat("You reply OK.", "ping", max_tokens=2)

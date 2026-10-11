@@ -72,7 +72,8 @@ def set_scores(pred: Any, gold: list[str]) -> dict:
     prec = tp_p / len(p) if p else 0.0
     rec = len(matched_g) / len(g) if g else 0.0
     f1 = 2 * prec * rec / (prec + rec) if prec + rec else 0.0
-    return {"precision": prec, "recall": rec, "f1": f1, "exact": bool(p) and len(matched_g) == len(g) and tp_p == len(p)}
+    exact = bool(p) and len(matched_g) == len(g) and tp_p == len(p)
+    return {"precision": prec, "recall": rec, "f1": f1, "exact": exact}
 
 
 def parse_bool(ans: Any) -> bool | None:

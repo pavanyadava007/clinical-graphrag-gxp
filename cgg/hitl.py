@@ -36,7 +36,8 @@ DECISIONS = {"approve": "approved", "reject": "rejected", "edit": "edited"}
 
 
 class ReviewQueue:
-    def __init__(self, path: Path = config.HITL_DIR / "queue.db", run_id: str | None = None):
+    def __init__(self, path: Path | None = None, run_id: str | None = None):
+        path = path or config.HITL_DIR / "queue.db"
         path.parent.mkdir(parents=True, exist_ok=True)
         self.path, self.run_id = path, run_id
         with self._db() as db:

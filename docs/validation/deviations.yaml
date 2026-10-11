@@ -1,0 +1,17 @@
+# Known deviations from a full validation, recorded by the developer. Generated reports list them as-is.
+deviations:
+  - id: DEV-01
+    text: "The measured HITL step uses an automated oracle reviewer that decides from the gold set. Accuracy after review is therefore an upper bound; no human reviewer took part in the PQ run."
+    impact: "accuracy_after_review overstates what a human review would achieve"
+  - id: DEV-02
+    text: "User identities come from config/roles.yaml and CGG_USER; they are not authenticated (no SSO, no password or PIN at signing). Approvals are Part 11-style records, not compliant electronic signatures."
+    impact: "Segregation of duties is enforced in code but could be bypassed by setting another identity"
+  - id: DEV-03
+    text: "Before the development set existed, the first prompt iteration was smoke-tested on 15 gold questions; the resulting fixes were generic (Neo4j transaction API, schema direction rule, '<>' operator). Later prompt work used eval/dev_set.jsonl only."
+    impact: "Small optimistic bias possible on the gold set"
+  - id: DEV-04
+    text: "The pipeline ran locally on PySpark + Delta Lake, not on a Databricks workspace. The Asset Bundle (databricks.yml) and notebooks are provided but were never deployed."
+    impact: "Databricks-specific behaviour (Unity Catalog permissions, job clusters) is not verified"
+  - id: DEV-05
+    text: "The corpus is a public openFDA snapshot (321 labels after quality checks), and the gold set is generated from structured fields; free-text reasoning questions are only covered by quote questions."
+    impact: "PQ results do not cover open clinical reasoning questions"
